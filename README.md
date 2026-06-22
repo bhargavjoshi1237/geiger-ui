@@ -16,7 +16,7 @@ shadcn/ui primitives plus the suite's semantic design tokens — one design lang
 
 The package is **source-shipped and GitHub-installed**: there is no build step. Consuming Next.js apps transpile the JSX directly, which keeps the library trivial to change and impossible to get out of sync with a stale build artefact.
 
-Canonical source of the primitives: **geiger-flow** `components/ui/`.
+Canonical source of the primitives: **this repository**. They started out in **geiger-flow** `components/ui/`, which has since been retired in favour of this package.
 
 ## Install
 
