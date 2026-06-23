@@ -61,7 +61,9 @@ src/
   ui/            shadcn primitives — the shared components
   nav/           navigation visibility: config schema, resolver, settings UI
   lib/utils.js   cn() helper
+  lib/hooks/     shared hooks (useIsMobile)
   tokens.css     design tokens (:root / .dark), base layer, and suite utilities
+  logo-loading.css  LogoLoading keyframes (imported by tokens.css)
   index.js       public barrel — the single import surface
 ```
 
