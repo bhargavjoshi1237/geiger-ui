@@ -44,6 +44,7 @@ export * from "./ui/activity-calendar.jsx";
 export * from "./ui/calendar.jsx";
 export * from "./ui/issue-item.jsx";
 export * from "./ui/search-bar.jsx";
+export * from "./ui/topbar.jsx";
 
 // Default-export components (re-exported as named)
 export { default as Logo } from "./ui/logo.jsx";
