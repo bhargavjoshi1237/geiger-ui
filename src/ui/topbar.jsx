@@ -8,17 +8,24 @@ import { SidebarTrigger } from "./sidebar.jsx";
 
 // Shared suite topbar (presentational). Product-specific, data-bound pieces are
 // passed in as slots so this component stays pure UI and lives in @geiger/ui:
+//   - sidebarTrigger: the mobile sidebar toggle. Pass one bound to the app's own
+//     SidebarProvider; falls back to this package's SidebarTrigger otherwise.
 //   - notifications: the notifications trigger + dropdown (app-wired)
 //   - profile: the profile avatar + dropdown (app-wired)
 //   - activity: e.g. a Supabase activity line rendered under the header
-// `label` is the product name; `logoSrc` defaults to /logo1.svg. A built-in
+// `label` is the product name shown next to the logo; `logoSrc` defaults to
+// /logo1.svg and the logo links to `homeHref`. `helpHref` points the ? button
+// somewhere (e.g. /docs); with no href it renders an inert button. A built-in
 // Bell button renders only when no `notifications` slot is provided.
 export function Topbar({
   label,
   logoSrc = "/logo1.svg",
+  homeHref = "/",
+  helpHref,
   searchPlaceholder = "Search...",
   onSearchClick,
   showHelp = true,
+  sidebarTrigger = null,
   notifications = null,
   profile = null,
   activity = null,
@@ -34,15 +41,21 @@ export function Topbar({
   return (
     <header className="relative h-14 px-4 flex items-center justify-between border-b border-border bg-topbar-bg text-foreground z-20 w-full shrink-0">
       <div className="flex items-center gap-1.5">
-        <SidebarTrigger className="md:hidden -ml-2 text-foreground" />
-        <div className="hidden w-8 h-8 rounded items-center justify-center shrink-0 md:flex md:-ml-1.5">
+        {sidebarTrigger ?? (
+          <SidebarTrigger className="md:hidden -ml-2 text-foreground" />
+        )}
+        <a
+          href={homeHref}
+          aria-label="Home"
+          className="hidden w-8 h-8 rounded items-center justify-center shrink-0 md:flex md:-ml-1.5 hover:bg-surface-active transition-colors"
+        >
           <img
             src={logoSrc}
             alt=""
             className="w-5 h-5 -mr-0.5"
             onError={handleLogoError}
           />
-        </div>
+        </a>
         <div className="flex items-center gap-1 group group-data-[collapsible=icon]:hidden md:border-l md:border-border pl-2 hidden sm:flex">
           <span className="text-foreground font-semibold text-sm ml-1">{label}</span>
         </div>
@@ -86,11 +99,19 @@ export function Topbar({
           <div className="flex items-center gap-0 sm:gap-1 ml-0 sm:ml-1">
             {showHelp && (
               <Button
+                asChild={Boolean(helpHref)}
                 variant="ghost"
                 size="icon-sm"
+                aria-label="Help"
                 className="w-8 h-8 rounded-full border border-transparent hover:bg-surface-hover hidden sm:flex items-center justify-center transition-colors text-muted-foreground hover:text-foreground"
               >
-                <HelpCircle className="w-[18px] h-[18px]" strokeWidth={2} />
+                {helpHref ? (
+                  <a href={helpHref}>
+                    <HelpCircle className="w-[18px] h-[18px]" strokeWidth={2} />
+                  </a>
+                ) : (
+                  <HelpCircle className="w-[18px] h-[18px]" strokeWidth={2} />
+                )}
               </Button>
             )}
             {notifications ?? (

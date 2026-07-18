@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Shared Geiger suite UI component library (shadcn/ui primitives + semantic tokens).",
   "type": "module",
+  "types": "dist/types/index.d.ts",
   "sideEffects": [
     "*.css"
   ],
