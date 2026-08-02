@@ -1,7 +1,10 @@
-# design-sync notes — @geiger/ui → Geiger Studio
+# design-sync notes — @geiger/ui → Geiger UI
 
-- **Target project**: Geiger Studio (`dd3dbe67-2e02-4f2c-b93b-a9abf4b1a8e2`), `window.GeigerFlow` global (kept from the prior sync to avoid a full re-key).
+- **Target project**: Geiger UI (`11ead9c7-ea72-4053-b753-037493d20323`), `window.GeigerUi` global.
+  - The previous project ("Geiger Studio", `dd3dbe67-…`) was **deleted server-side** — `get_project` 404s. The 2026-07-29 run created a fresh project and re-keyed the global from `GeigerFlow` → `GeigerUi` (no preview hardcodes the global; they all import from `"@geiger/ui"` and the build rewrites it, so a re-key is free).
+  - Because the old project is gone, there is **no remote `_ds_sync.json` anchor** to carry verification forward. Local grades in `.design-sync/.cache/review/` are the only carry-forward on this machine.
 - **Shape**: `package`, source-only (no `dist/`, no build script). Converter runs synth-entry from `src/index.js`. `.d.ts` are synthesized/weak because the library is plain JSX, not TS.
+- **Conventions header**: `.design-sync/conventions.md`, wired via `cfg.readmeHeader`. It is prepended to the generated README and read by the design agent. Validate its named classes/tokens/components against the fresh build every run; don't rewrite it wholesale.
 - **Styling is Tailwind v4** (`@theme inline`, `@custom-variant`, `@apply` in `src/tokens.css`). The package ships NO compiled CSS — consuming apps generate utilities via `@source` scanning. So we pre-compile Tailwind against `src/ui` into `.design-sync/tailwind-compiled.css` and point `cfg.cssEntry` at it, otherwise every preview renders unstyled.
 - **Prior sync shipped floor cards only** — no authored previews existed. This run authors previews for the whole library.
 - **Delta vs the uploaded build**: new `Topbar` component (added to the barrel in the working tree, uncommitted). Bundle/.d.ts/.prompt.md otherwise rebuild ~identical.
@@ -28,6 +31,36 @@
 - **Charts: recharts ships as two copies** (copy A in `_ds_bundle.js` via `@geiger/ui`; copy B from a preview's own `import "recharts"`). A copy-B `<BarChart>` reads copy-B context and mounts 0×0 → blank. Fix (used in all chart previews): nest a numeric-size `<ResponsiveContainer width={N} height={N}>` from the preview's recharts inside `<ChartContainer>`, and wire tooltips/legends with recharts' OWN `Tooltip`/`Legend` + `ChartTooltipContent`/`ChartLegendContent` as `content` (`defaultIndex` forces tooltip open). `ChartContainer` still supplies the config/colour context across the boundary.
 - API quick-refs: `CardAction` only anchors top-right INSIDE `CardHeader`; `Input`/`Textarea` are `w-full` → wrap in a width-constrained div; `Separator orientation="vertical"` needs a fixed-height flex row; `ScrollArea` renders its own `ScrollBar` (children go in the viewport); Radix scrollbar thumb only paints on hover (clipped overflow is the static cue).
 
+## The precompiled-utility constraint (matters to the design agent, not just previews)
+`_ds_bundle.css` IS `tailwind-compiled.css` — ~580 utilities, only those scanned from `src/ui`.
+Rendered designs receive nothing else, so **any class outside that set silently no-ops in real
+designs too**, not just in previews. Confirmed absent: `min-h-screen`, `gap-5`, `p-8`, `text-3xl`,
+and every arbitrary value (`w-[520px]`). Also absent: `text-chart-*` / `bg-chart-*` — chart series
+colors are `var(--chart-1..5)` passed through `ChartContainer`'s `config`, which re-exposes them as
+`var(--color-<key>)`. Verify any class before naming it in conventions.md:
+`grep -E "^\s*\.<class>[,: {]" ds-bundle/_ds_bundle.css` (utilities are nested in `@layer`, so an
+`^\.` anchor gives false negatives).
+
+## 2026-07-29 run — render verification was skipped
+- Playwright's chromium was **not cached on this machine** (`~/AppData/Local/ms-playwright` absent)
+  and the user declined the ~200MB install. Consequences, both expected:
+  - `package-validate.mjs` was run with `--no-render-check` → `[RENDER_SKIPPED]`, no
+    `.render-check.json`, and `report_validate` was **skipped** rather than fed invented counts.
+  - `resync.mjs` exits **1 with only the capture stage failing** (build/diff/validate all ok). That
+    specific failure shape means "no browser", not "broken bundle" — check
+    `ds-bundle/.resync-verdict.json` `stages` before chasing it.
+- No new previews were authored this run (user deferred): 44 authored / 43 graded good carried
+  forward, 123 components ship the floor card. `Dialog` has an authored preview but has **never been
+  graded** — grade it first when a browser is next available.
+- Playwright 1.60.0 (in `.ds-sync/node_modules`) pins chromium build **1223**; install that pair.
+
 ## Re-sync risks
 - `tailwind-compiled.css` is a generated artifact regenerated from `src/` on each run; if Tailwind v4 or tokens.css change, recompile before building.
-- The `@geiger/ui` working tree has uncommitted changes (topbar.jsx, index.js) — the synced build reflects the working tree, not a committed tag.
+- The `@geiger/ui` working tree has uncommitted changes — as of 2026-07-29: `src/ui/topbar.jsx`
+  (modified), `src/index.js` (adds the command-palette export), and **untracked**
+  `src/ui/command-palette.jsx`. The synced build reflects the working tree, not a committed tag; if
+  those files are ever reverted or lost, `CommandPalette` and the expanded `Topbar` vanish from the
+  next build (167 components → 165).
+- `dist/types/` is regenerated per run (`tsc` + the extension-stripping `sed`) and is NOT committed —
+  a fresh clone must re-run build setup steps 1–4 before the converter.
+- Component count is the fast integrity check: **167** as of this run.

@@ -3,6 +3,11 @@
 import React from "react";
 import { Search, Bell, HelpCircle } from "lucide-react";
 import { Button } from "./button.jsx";
+import {
+  CommandPalette,
+  useCommandShortcut,
+  useModifierKeyLabel,
+} from "./command-palette.jsx";
 import { Kbd, KbdGroup } from "./kbd.jsx";
 import { SidebarTrigger } from "./sidebar.jsx";
 
@@ -17,6 +22,14 @@ import { SidebarTrigger } from "./sidebar.jsx";
 // /logo1.svg and the logo links to `homeHref`. `helpHref` points the ? button
 // somewhere (e.g. /docs); with no href it renders an inert button. A built-in
 // Bell button renders only when no `notifications` slot is provided.
+//
+// Stable default so the palette's memoised entry pool isn't rebuilt every render.
+const NO_SEARCH_ITEMS = [];
+
+// Search: pass the product's sidebar nav as `searchNav` (and any extra entries
+// as `searchItems`) and the button — plus ⌘K / Ctrl+K — opens the shared
+// CommandPalette; `onSearchSelect(item, entry)` receives the chosen destination.
+// With no `searchNav`, the button falls back to the legacy `onSearchClick`.
 export function Topbar({
   label,
   logoSrc = "/logo1.svg",
@@ -24,12 +37,28 @@ export function Topbar({
   helpHref,
   searchPlaceholder = "Search...",
   onSearchClick,
+  searchNav = null,
+  searchItems = NO_SEARCH_ITEMS,
+  onSearchSelect,
+  searchRootGroupLabel = "Workspace",
+  searchRecentsKey = "geiger:palette:recents",
   showHelp = true,
   sidebarTrigger = null,
   notifications = null,
   profile = null,
   activity = null,
 }) {
+  const [searchOpen, setSearchOpen] = React.useState(false);
+  const modKey = useModifierKeyLabel();
+  const hasPalette = Boolean(searchNav?.length || searchItems.length);
+
+  const openSearch = React.useCallback(() => {
+    if (hasPalette) setSearchOpen(true);
+    onSearchClick?.();
+  }, [hasPalette, onSearchClick]);
+
+  useCommandShortcut(openSearch, { enabled: hasPalette });
+
   const handleLogoError = (e) => {
     e.currentTarget.style.display = "none";
     if (e.currentTarget.parentElement) {
@@ -76,8 +105,10 @@ export function Topbar({
       <div className="flex justify-between gap-4 md:gap-8 sm:mr-2">
         <div className="flex items-center gap-2 sm:gap-3">
           <Button
-            onClick={onSearchClick}
+            onClick={openSearch}
             variant="ghost"
+            aria-label="Search"
+            aria-keyshortcuts="Meta+K Control+K"
             className="relative hidden items-center bg-surface-active border border-border hover:border-border-strong transition-colors rounded-md h-8 px-2 sm:flex sm:px-2.5 w-8 sm:w-[240px] justify-center sm:justify-start text-sm text-muted-foreground shadow-sm group"
           >
             <Search className="w-4 h-4 sm:mr-2 text-muted-foreground group-hover:text-foreground transition-colors" />
@@ -87,13 +118,24 @@ export function Topbar({
             <div className="absolute right-1.5 top-1.5 hidden sm:flex items-center gap-1">
               <KbdGroup>
                 <Kbd className="bg-surface-subtle border-border text-muted-foreground group-hover:bg-surface-hover group-hover:text-foreground transition-colors">
-                  ⌘
+                  {modKey}
                 </Kbd>
                 <Kbd className="bg-surface-subtle border-border text-muted-foreground group-hover:bg-surface-hover group-hover:text-foreground transition-colors">
                   K
                 </Kbd>
               </KbdGroup>
             </div>
+          </Button>
+
+          {/* Below sm the wide field is hidden, so search gets its own icon. */}
+          <Button
+            onClick={openSearch}
+            variant="ghost"
+            size="icon-sm"
+            aria-label="Search"
+            className="w-8 h-8 rounded-full border border-transparent hover:bg-surface-hover flex items-center justify-center transition-colors text-muted-foreground hover:text-foreground sm:hidden"
+          >
+            <Search className="w-[18px] h-[18px]" strokeWidth={2} />
           </Button>
 
           <div className="flex items-center gap-0 sm:gap-1 ml-0 sm:ml-1">
@@ -128,6 +170,19 @@ export function Topbar({
         </div>
       </div>
       {activity}
+
+      {hasPalette && (
+        <CommandPalette
+          open={searchOpen}
+          onOpenChange={setSearchOpen}
+          nav={searchNav || []}
+          items={searchItems}
+          onSelect={onSearchSelect}
+          placeholder={searchPlaceholder}
+          rootGroupLabel={searchRootGroupLabel}
+          recentsKey={searchRecentsKey}
+        />
+      )}
     </header>
   );
 }

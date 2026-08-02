@@ -1,9 +1,10 @@
 {
   "pkg": "@geiger/ui",
-  "globalName": "GeigerFlow",
-  "projectId": "dd3dbe67-2e02-4f2c-b93b-a9abf4b1a8e2",
+  "globalName": "GeigerUi",
+  "projectId": "11ead9c7-ea72-4053-b753-037493d20323",
   "shape": "package",
   "cssEntry": ".design-sync/tailwind-compiled.css",
+  "readmeHeader": ".design-sync/conventions.md",
   "overrides": {
     "Dialog": { "cardMode": "single", "viewport": "560x440" },
     "DialogTrigger": { "cardMode": "single", "viewport": "560x440" },
