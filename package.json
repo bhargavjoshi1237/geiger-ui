@@ -1,6 +1,6 @@
 {
   "name": "@geiger/ui",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Shared Geiger suite UI component library (shadcn/ui primitives + semantic tokens).",
   "type": "module",
   "types": "dist/types/index.d.ts",

@@ -59,10 +59,88 @@ import { Button, Card, Sidebar } from "@geiger/ui";
 ```
 src/
   ui/            shadcn primitives — the shared components
+  nav/           navigation visibility: config schema, resolver, settings UI
   lib/utils.js   cn() helper
   tokens.css     design tokens (:root / .dark), base layer, and suite utilities
   index.js       public barrel — the single import surface
 ```
+
+## Navigation visibility
+
+Every product lets users decide what sits in the sidebar — and every product has
+screens that can't work alone. `@geiger/ui` owns both halves so no app
+re-implements them: the app declares its rules in a **`geiger-ui.config.js`**, the
+library enforces them.
+
+**1. Declare the rules** — `geiger-ui.config.js` in the app root:
+
+```js
+import { defineNavConfig } from "@geiger/ui";
+
+export default defineNavConfig({
+  product: "events",
+
+  // Never hideable — the app is unusable without them.
+  locked: ["Overview", "Settings"],
+
+  // Hidden until a user turns them on (optional).
+  hiddenByDefault: [],
+
+  // The rules section. One entry per dependent nav title; `requires` lists the
+  // titles it can't function without. Titles match the nav tree exactly and
+  // address top-level sections and sub-items alike.
+  dependencies: [
+    {
+      screen: "Session Check-in",
+      requires: ["Check-in", "Agenda Builder"],
+      reason: "Session check-in scans against the agenda's sessions.",
+    },
+  ],
+});
+```
+
+The config is validated and frozen at import: bad shapes, self-references and
+requirement **cycles** throw immediately rather than producing a sidebar that
+can't be toggled back out.
+
+**2. Filter the sidebar** with the user's hidden titles:
+
+```js
+import { applyNavVisibility } from "@geiger/ui";
+import navConfig from "@/geiger-ui.config";
+
+const visibleNav = applyNavVisibility(workspaceNav, hiddenTitles, navConfig);
+```
+
+A section whose sub-items are all hidden disappears too.
+
+**3. Render the settings surface**:
+
+```jsx
+import { NavVisibilitySettings } from "@geiger/ui";
+
+<NavVisibilitySettings
+  nav={workspaceNav}
+  config={navConfig}
+  hidden={hiddenTitles}
+  onToggle={(title, nextHidden) => persist(title, nextHidden)}
+  onReset={showAll}
+/>;
+```
+
+### The guarantee
+
+**A visible entry's requirements are visible too**, enforced from both directions:
+hiding an entry is blocked while something visible needs it, and showing an entry
+is blocked while its requirements are still hidden. A blocked switch is disabled
+and says why on hover — nothing is ever hidden or shown behind the user's back.
+
+The app owns **persistence only**. Where the hidden list lives (per user, per
+project, local storage, a table) is a product decision; `sanitizeHidden()` drops
+stale and locked titles before you trust a stored list.
+
+Everything except the settings component is pure — no React, no I/O — so it is
+safe to call during render.
 
 ## Versioning
 

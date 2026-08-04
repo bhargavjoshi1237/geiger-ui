@@ -53,5 +53,17 @@ export { default as Logo } from "./ui/logo.jsx";
 export { default as Footer } from "./ui/footer.jsx";
 export { default as ThemeToggle } from "./ui/theme-toggle.jsx";
 
+// Navigation visibility — config schema, dependency resolver, settings surface.
+export { defineNavConfig, EMPTY_NAV_CONFIG } from "./nav/nav-config.js";
+export {
+  applyNavVisibility,
+  canToggleNavItem,
+  defaultHiddenNav,
+  navTitles,
+  navVisibilityModel,
+  sanitizeHidden,
+} from "./nav/resolve.js";
+export { NavVisibilitySettings } from "./nav/nav-visibility-settings.jsx";
+
 // Hooks
 export { useIsMobile } from "./lib/hooks/use-mobile.js";
