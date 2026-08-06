@@ -24,7 +24,7 @@ Canonical source of the primitives: **this repository**. They started out in **g
 npm i github:bhargavjoshi1237/geiger-ui#v0.2.0
 ```
 
-The peer dependencies (`react`, `radix-ui`, `lucide-react`, `class-variance-authority`, `clsx`, `tailwind-merge`, `sonner`, `next-themes`) are already present in every Geiger app, so there is nothing extra to install. Optional peers (`recharts`, `input-otp`, the standalone Radix slider/switch/tabs packages) are only needed by the components that use them. `react-hook-form` and `vaul` ship as regular dependencies because the root barrel imports the form and drawer components; apps can still declare their own copy and npm will dedupe when the range matches.
+The peer dependencies (`react`, `react-dom`, `radix-ui`, `lucide-react`, `class-variance-authority`, `clsx`, `tailwind-merge`, `sonner`, `next-themes`) are already present in every Geiger app, so there is nothing extra to install. Optional peers (`recharts`, `input-otp`, `react-day-picker` for the date picker, the standalone Radix slider/switch/tabs packages) are only needed by the components that use them. `react-hook-form` and `vaul` ship as regular dependencies because the root barrel imports the form and drawer components; apps can still declare their own copy and npm will dedupe when the range matches.
 
 ## Wire it up
 
