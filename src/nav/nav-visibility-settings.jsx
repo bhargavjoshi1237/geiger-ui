@@ -117,7 +117,9 @@ function SubItemRow({ item, busy, onToggle }) {
 // The header's summary: how much of the sidebar is left, as a number and as a
 // meter, with the reset sitting right next to what it would undo.
 function VisibilitySummary({ visible, hiddenCount, total, onReset, busy }) {
-  const pct = total ? Math.round((visible / total) * 100) : 0;
+  // A stale pref (a title hidden before it left the nav) can outnumber what is
+  // actually on screen, so the meter is clamped rather than trusted.
+  const pct = total ? Math.min(100, Math.max(0, Math.round((visible / total) * 100))) : 0;
 
   return (
     <div className="flex flex-wrap items-center gap-2.5 rounded-lg border border-border bg-surface-subtle px-3 py-1.5">
@@ -279,7 +281,7 @@ export function NavVisibilitySettings({
     [model.sections, query],
   );
 
-  const visibleCount = model.total - model.hiddenCount;
+  const visibleCount = Math.max(0, model.total - model.hiddenCount);
 
   return (
     <TooltipProvider>
