@@ -11,12 +11,12 @@
 // applied silently in either direction.
 
 import * as React from "react";
-import { ChevronDown, Eye, EyeOff, Lock, RotateCcw, Search } from "lucide-react";
+import { ChevronDown, Eye, EyeOff, Lock, RotateCcw } from "lucide-react";
 
 import { cn } from "../lib/utils.js";
 import { Badge } from "../ui/badge.jsx";
 import { Button } from "../ui/button.jsx";
-import { Input } from "../ui/input.jsx";
+import { ExpandableSearch } from "../ui/expandable-search.jsx";
 import { Switch } from "../ui/switch.jsx";
 import {
   Tooltip,
@@ -110,6 +110,68 @@ function SubItemRow({ item, busy, onToggle }) {
         <DependencyHints item={item} />
       </div>
       <VisibilityToggle item={item} busy={busy} onToggle={onToggle} />
+    </div>
+  );
+}
+
+// The header's summary: how much of the sidebar is left, as a number and as a
+// meter, with the reset sitting right next to what it would undo.
+function VisibilitySummary({ visible, hiddenCount, total, onReset, busy }) {
+  const pct = total ? Math.round((visible / total) * 100) : 0;
+
+  return (
+    <div className="flex flex-wrap items-center gap-2.5 rounded-lg border border-border bg-surface-subtle px-3 py-1.5">
+      <span className="inline-flex items-center gap-1.5 text-[13px] text-text-secondary">
+        <Eye className="h-3.5 w-3.5 text-emerald-400" />
+        <span className="font-medium tabular-nums text-foreground">{visible}</span>
+        of <span className="tabular-nums">{total}</span> shown
+      </span>
+
+      <span
+        className="h-1.5 w-16 overflow-hidden rounded-full bg-surface-strong"
+        role="img"
+        aria-label={`${pct}% of the sidebar is shown`}
+      >
+        <span
+          className="block h-full rounded-full bg-emerald-400/80 transition-[width] duration-300"
+          style={{ width: `${pct}%` }}
+        />
+      </span>
+
+      <span className="h-3.5 w-px bg-border" aria-hidden="true" />
+
+      <span
+        className={cn(
+          "inline-flex items-center gap-1.5 text-[13px]",
+          hiddenCount ? "text-text-secondary" : "text-text-tertiary",
+        )}
+      >
+        <EyeOff className="h-3.5 w-3.5 text-text-tertiary" />
+        {hiddenCount ? (
+          <>
+            <span className="font-medium tabular-nums text-foreground">{hiddenCount}</span>
+            hidden
+          </>
+        ) : (
+          "nothing hidden"
+        )}
+      </span>
+
+      {/* Only offered when there is something to undo — its absence is the
+          "you're seeing everything" signal. */}
+      {onReset && hiddenCount > 0 ? (
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={onReset}
+          disabled={busy}
+          className="-mr-1.5 ml-0.5 h-7 gap-1.5 px-2 text-xs text-text-secondary hover:bg-surface-hover hover:text-foreground"
+        >
+          <RotateCcw className="h-3.5 w-3.5" />
+          Show all
+        </Button>
+      ) : null}
     </div>
   );
 }
@@ -222,41 +284,22 @@ export function NavVisibilitySettings({
   return (
     <TooltipProvider>
       <div className={cn("space-y-4", className)}>
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="relative min-w-[220px] flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-tertiary" />
-            <Input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search navigation…"
-              className="h-9 border-border bg-surface-card pl-9 text-sm"
-            />
-          </div>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <VisibilitySummary
+            visible={visibleCount}
+            hiddenCount={model.hiddenCount}
+            total={model.total}
+            onReset={onReset}
+            busy={busy}
+          />
 
-          <div className="flex items-center gap-3 text-[11px] text-text-secondary">
-            <span className="flex items-center gap-1.5">
-              <Eye className="h-3.5 w-3.5 text-emerald-400" />
-              {visibleCount} shown
-            </span>
-            <span className="flex items-center gap-1.5">
-              <EyeOff className="h-3.5 w-3.5 text-text-tertiary" />
-              {model.hiddenCount} hidden
-            </span>
-          </div>
-
-          {onReset ? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={onReset}
-              disabled={busy || model.hiddenCount === 0}
-              className="h-9 gap-1.5 px-3 text-xs text-text-secondary hover:bg-surface-hover"
-            >
-              <RotateCcw className="h-3.5 w-3.5" />
-              Show all
-            </Button>
-          ) : null}
+          <ExpandableSearch
+            value={query}
+            onChange={setQuery}
+            placeholder="Search navigation…"
+            label="Search navigation"
+            className="ml-auto"
+          />
         </div>
 
         {sections.length === 0 ? (
