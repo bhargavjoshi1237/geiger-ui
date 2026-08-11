@@ -7,16 +7,23 @@
 // onToggle that persists. All the dependency reasoning lives in ./resolve.js, so
 // this component only renders the model it gets back.
 //
-// A blocked switch is disabled and explains itself on hover; the change is never
-// applied silently in either direction.
+// Two panes, not one list. A product's nav runs to twenty-odd sections over a
+// hundred-odd screens; a single list that expands inline turns curating one
+// section into a scroll hunt, and crowds every row with a count, a chevron, a
+// footnote and a switch at once. Here the rail picks a section and the panel
+// edits it, so only one section's screens are ever on screen — the rail row
+// carries a count, the panel row carries the switch, and neither carries both.
+//
+// A blocked switch is never silently overridden: it is disabled, and its row
+// names the entries blocking it as chips that jump straight to them.
 
 import * as React from "react";
-import { ChevronDown, Eye, EyeOff, Lock, RotateCcw } from "lucide-react";
+import { ChevronRight, EyeOff, Info, Lock, RotateCcw } from "lucide-react";
 
 import { cn } from "../lib/utils.js";
-import { Badge } from "../ui/badge.jsx";
 import { Button } from "../ui/button.jsx";
 import { ExpandableSearch } from "../ui/expandable-search.jsx";
+import { SegmentedTabs } from "../ui/segmented-tabs.jsx";
 import { Switch } from "../ui/switch.jsx";
 import {
   Tooltip,
@@ -27,20 +34,62 @@ import {
 import { EMPTY_NAV_CONFIG } from "./nav-config.js";
 import { navVisibilityModel } from "./resolve.js";
 
-function matches(query, section) {
-  if (!query) return true;
-  const needle = query.toLowerCase();
-  return (
-    section.title.toLowerCase().includes(needle) ||
-    section.subItems.some((sub) => sub.title.toLowerCase().includes(needle))
+const FILTERS = ["all", "shown", "hidden", "locked"];
+
+const FILTER_LABELS = {
+  all: "All",
+  shown: "Shown",
+  hidden: "Hidden",
+  locked: "Always on",
+};
+
+function matchesFilter(item, filter) {
+  if (filter === "shown") return !item.hidden;
+  if (filter === "hidden") return item.hidden;
+  if (filter === "locked") return item.locked;
+  return true;
+}
+
+// Searching a section by name means "show me that section", so a title hit
+// carries its whole roster through rather than filtering it down to itself.
+function sectionRows(section, filter, needle) {
+  const sectionHit = Boolean(needle) && section.title.toLowerCase().includes(needle);
+  return section.subItems.filter(
+    (sub) =>
+      matchesFilter(sub, filter) &&
+      (!needle || sectionHit || sub.title.toLowerCase().includes(needle)),
   );
 }
 
-// One switch plus its explanation. Disabled switches still need a hover target,
-// so the tooltip wraps a span rather than the control itself.
+function isListed(section, filter, needle) {
+  const sectionHit = !needle || section.title.toLowerCase().includes(needle);
+  if (matchesFilter(section, filter) && sectionHit) return true;
+  return sectionRows(section, filter, needle).length > 0;
+}
+
+// --- Controls ----------------------------------------------------------------
+
+// Locked entries drop the switch entirely. A permanently-on control that refuses
+// every click is the thing people ask about; a lock says the same in one glance.
 function VisibilityToggle({ item, busy, onToggle }) {
+  if (item.locked) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="inline-flex h-5 shrink-0 cursor-help items-center gap-1 rounded-md border border-border bg-surface-card px-1.5 text-[10px] font-medium text-text-tertiary">
+            <Lock className="h-2.5 w-2.5" />
+            On
+          </span>
+        </TooltipTrigger>
+        <TooltipContent side="left" className="max-w-[260px] text-xs">
+          {`${item.title} is always available and can't be hidden.`}
+        </TooltipContent>
+      </Tooltip>
+    );
+  }
+
   const control = (
-    <span className="inline-flex">
+    <span className="inline-flex shrink-0">
       <Switch
         checked={!item.hidden}
         disabled={busy || !item.canToggle}
@@ -50,215 +99,284 @@ function VisibilityToggle({ item, busy, onToggle }) {
     </span>
   );
 
-  if (item.canToggle && !item.locked) return control;
+  if (item.canToggle) return control;
 
+  // A disabled switch has no hover target of its own, so the tooltip wraps a
+  // span rather than the control.
   return (
     <Tooltip>
       <TooltipTrigger asChild>{control}</TooltipTrigger>
       <TooltipContent side="left" className="max-w-[260px] text-xs">
-        {item.blockedReason || `${item.title} is always available.`}
+        {item.blockedReason}
       </TooltipContent>
     </Tooltip>
   );
 }
 
-function DependencyHints({ item }) {
-  if (item.requires.length === 0 && item.requiredBy.length === 0) return null;
+// Why this row won't move, with the entries responsible as chips — the fix is
+// always "go deal with that other entry", so the note is the way there.
+function BlockedNote({ item, onJump }) {
+  if (item.locked || item.canToggle) return null;
+
+  const blockers = item.blockers || [];
+  if (blockers.length === 0) {
+    return (
+      <p className="mt-1.5 text-[11px] leading-relaxed text-text-tertiary">
+        {item.blockedReason}
+      </p>
+    );
+  }
 
   return (
-    <div className="mt-1 flex flex-wrap items-center gap-1.5">
-      {item.requires.length > 0 ? (
-        <Badge className="h-4 border-border bg-surface-card px-1.5 text-[10px] font-normal text-text-tertiary">
-          needs {item.requires.join(", ")}
-        </Badge>
-      ) : null}
-      {item.requiredBy.length > 0 ? (
-        <Badge className="h-4 border-border bg-surface-card px-1.5 text-[10px] font-normal text-text-tertiary">
-          needed by {item.requiredBy.join(", ")}
-        </Badge>
-      ) : null}
+    <p className="mt-1.5 flex flex-wrap items-center gap-1 text-[11px] text-text-tertiary">
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="inline-flex cursor-help items-center">
+            <Info className="h-3 w-3" />
+          </span>
+        </TooltipTrigger>
+        <TooltipContent side="top" className="max-w-[260px] text-xs">
+          {item.blockedReason}
+        </TooltipContent>
+      </Tooltip>
+      <span>{item.hidden ? "Needs" : "Needed by"}</span>
+      {blockers.map((title) => (
+        <button
+          key={title}
+          type="button"
+          onClick={() => onJump(title)}
+          className="rounded border border-border bg-surface-card px-1.5 py-px font-medium text-text-secondary transition-colors hover:border-border-strong hover:text-foreground"
+        >
+          {title}
+        </button>
+      ))}
+    </p>
+  );
+}
+
+function ScreenMeter({ shown, total }) {
+  const pct = total ? Math.round((shown / total) * 100) : 0;
+  return (
+    <div className="mt-3.5 space-y-1.5">
+      <div className="h-1 overflow-hidden rounded-full bg-surface-hover">
+        <div
+          className="h-full rounded-full bg-primary transition-[width] duration-300"
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+      <p className="text-[11px] tabular-nums text-text-tertiary">
+        {shown} of {total} screens in your sidebar
+      </p>
     </div>
   );
 }
 
-function SubItemRow({ item, busy, onToggle }) {
-  const Icon = item.icon;
+// --- Rail --------------------------------------------------------------------
+
+function RailMeta({ section }) {
+  if (section.hidden) {
+    return (
+      <span className="shrink-0 text-[10px] font-medium uppercase tracking-wide text-text-tertiary">
+        Hidden
+      </span>
+    );
+  }
+  if (section.subItems.length > 0) {
+    const shown = section.subItems.filter((sub) => !sub.hidden).length;
+    return (
+      <span className="shrink-0 text-[11px] tabular-nums text-text-tertiary">
+        {shown}/{section.subItems.length}
+      </span>
+    );
+  }
+  if (section.locked) {
+    return <Lock className="h-3 w-3 shrink-0 text-text-tertiary" />;
+  }
+  return null;
+}
+
+function SectionRail({ sections, activeTitle, flash, onSelect, registerRow }) {
   return (
-    <div className="flex items-center gap-3 py-2 pl-11 pr-5">
-      {Icon ? (
-        <Icon
-          className={cn(
-            "h-3.5 w-3.5 shrink-0",
-            item.hidden ? "text-text-tertiary" : "text-text-secondary",
-          )}
-        />
-      ) : null}
+    <div className="overflow-hidden rounded-xl border border-border bg-surface-subtle lg:sticky lg:top-4">
+      <div className="max-h-[26rem] overflow-y-auto lg:max-h-[calc(100vh-13rem)]">
+        {sections.length === 0 ? (
+          <p className="px-4 py-10 text-center text-xs text-text-tertiary">
+            No section matches.
+          </p>
+        ) : (
+          sections.map((section) => {
+            const active = section.title === activeTitle;
+            const Icon = section.icon;
+            return (
+              <button
+                key={section.title}
+                type="button"
+                ref={(el) => registerRow(section.title, el)}
+                onClick={() => onSelect(section.title)}
+                aria-current={active ? "true" : undefined}
+                className={cn(
+                  "relative flex w-full items-center gap-2.5 border-b border-border px-3 py-2.5 text-left transition-colors last:border-b-0",
+                  active ? "bg-surface-active" : "hover:bg-surface-hover",
+                  flash === section.title && "bg-primary/10",
+                )}
+              >
+                {active ? (
+                  <span className="absolute inset-y-0 left-0 w-0.5 bg-primary" />
+                ) : null}
+                {Icon ? (
+                  <Icon
+                    className={cn(
+                      "h-4 w-4 shrink-0",
+                      section.hidden ? "text-text-tertiary" : "text-text-secondary",
+                    )}
+                  />
+                ) : null}
+                <span
+                  className={cn(
+                    "min-w-0 flex-1 truncate text-[13px] font-medium",
+                    section.hidden ? "text-text-tertiary" : "text-foreground",
+                  )}
+                >
+                  {section.title}
+                </span>
+                <RailMeta section={section} />
+                <ChevronRight
+                  className={cn(
+                    "h-3.5 w-3.5 shrink-0 transition-colors",
+                    active ? "text-text-secondary" : "text-text-tertiary/60",
+                  )}
+                />
+              </button>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
+}
+
+// --- Detail panel ------------------------------------------------------------
+
+function ScreenRow({ item, section, busy, flash, onToggle, onJump, registerRow }) {
+  return (
+    <div
+      ref={(el) => registerRow(item.title, el)}
+      className={cn(
+        "flex items-start gap-3 px-5 py-3 transition-colors",
+        flash === item.title && "bg-primary/10",
+      )}
+    >
       <div className="min-w-0 flex-1">
         <span
           className={cn(
             "text-[13px]",
-            item.hidden ? "text-text-tertiary line-through" : "text-foreground",
+            item.hidden ? "text-text-tertiary" : "text-foreground",
           )}
         >
           {item.title}
         </span>
         {item.shadowed ? (
-          <span className="ml-2 text-[10px] text-text-tertiary">
-            hidden with its section
-          </span>
+          <p className="mt-0.5 text-[11px] text-text-tertiary">
+            Hidden with {section.title}
+          </p>
         ) : null}
-        <DependencyHints item={item} />
+        <BlockedNote item={item} onJump={onJump} />
       </div>
       <VisibilityToggle item={item} busy={busy} onToggle={onToggle} />
     </div>
   );
 }
 
-// The header's summary: how much of the sidebar is left, as a number and as a
-// meter, with the reset sitting right next to what it would undo.
-function VisibilitySummary({ visible, hiddenCount, total, onReset, busy }) {
-  // A stale pref (a title hidden before it left the nav) can outnumber what is
-  // actually on screen, so the meter is clamped rather than trusted.
-  const pct = total ? Math.min(100, Math.max(0, Math.round((visible / total) * 100))) : 0;
+function SectionDetail({
+  section,
+  rows,
+  filter,
+  busy,
+  flash,
+  onToggle,
+  onJump,
+  registerRow,
+}) {
+  if (!section) {
+    return (
+      <div className="rounded-xl border border-border bg-surface-subtle px-5 py-16 text-center">
+        <p className="text-sm text-text-secondary">
+          Pick a section to choose what it puts in your sidebar.
+        </p>
+      </div>
+    );
+  }
 
-  return (
-    <div className="flex flex-wrap items-center gap-2.5 rounded-lg border border-border bg-surface-subtle px-3 py-1.5">
-      <span className="inline-flex items-center gap-1.5 text-[13px] text-text-secondary">
-        <Eye className="h-3.5 w-3.5 text-emerald-400" />
-        <span className="font-medium tabular-nums text-foreground">{visible}</span>
-        of <span className="tabular-nums">{total}</span> shown
-      </span>
-
-      <span
-        className="h-1.5 w-16 overflow-hidden rounded-full bg-surface-strong"
-        role="img"
-        aria-label={`${pct}% of the sidebar is shown`}
-      >
-        <span
-          className="block h-full rounded-full bg-emerald-400/80 transition-[width] duration-300"
-          style={{ width: `${pct}%` }}
-        />
-      </span>
-
-      <span className="h-3.5 w-px bg-border" aria-hidden="true" />
-
-      <span
-        className={cn(
-          "inline-flex items-center gap-1.5 text-[13px]",
-          hiddenCount ? "text-text-secondary" : "text-text-tertiary",
-        )}
-      >
-        <EyeOff className="h-3.5 w-3.5 text-text-tertiary" />
-        {hiddenCount ? (
-          <>
-            <span className="font-medium tabular-nums text-foreground">{hiddenCount}</span>
-            hidden
-          </>
-        ) : (
-          "nothing hidden"
-        )}
-      </span>
-
-      {/* Only offered when there is something to undo — its absence is the
-          "you're seeing everything" signal. */}
-      {onReset && hiddenCount > 0 ? (
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={onReset}
-          disabled={busy}
-          className="-mr-1.5 ml-0.5 h-7 gap-1.5 px-2 text-xs text-text-secondary hover:bg-surface-hover hover:text-foreground"
-        >
-          <RotateCcw className="h-3.5 w-3.5" />
-          Show all
-        </Button>
-      ) : null}
-    </div>
-  );
-}
-
-function SectionCard({ section, busy, onToggle, defaultExpanded }) {
-  const [expanded, setExpanded] = React.useState(defaultExpanded);
   const Icon = section.icon;
-  const hiddenSubs = section.subItems.filter((sub) => sub.hidden).length;
+  const total = section.subItems.length;
+  const shown = section.subItems.filter((sub) => !sub.hidden).length;
 
   return (
-    <div className="rounded-xl border border-border bg-surface-subtle">
-      <div className="flex items-center gap-3 px-5 py-3.5">
-        <div
-          className={cn(
-            "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border",
-            section.hidden ? "bg-background" : "bg-surface-card",
-          )}
-        >
+    <div className="overflow-hidden rounded-xl border border-border bg-surface-subtle">
+      <div className="border-b border-border px-5 py-4">
+        <div className="flex items-start gap-3">
           {Icon ? (
-            <Icon
-              className={cn(
-                "h-4 w-4",
-                section.hidden ? "text-text-tertiary" : "text-foreground",
-              )}
-            />
-          ) : null}
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              className={cn(
-                "text-[14px] font-medium",
-                section.hidden ? "text-text-tertiary line-through" : "text-foreground",
-              )}
-            >
-              {section.title}
+            <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border bg-surface-card text-text-secondary">
+              <Icon className="h-4 w-4" />
             </span>
-            {section.locked ? (
-              <Badge className="h-4 gap-1 border-border bg-surface-card px-1.5 text-[9px] font-medium text-text-tertiary">
-                <Lock className="h-2.5 w-2.5" />
-                Always on
-              </Badge>
-            ) : null}
-            {hiddenSubs > 0 && !section.hidden ? (
-              <Badge className="h-4 border-border bg-surface-card px-1.5 text-[9px] font-medium text-text-tertiary">
-                {hiddenSubs} of {section.subItems.length} hidden
-              </Badge>
-            ) : null}
+          ) : null}
+          <div className="min-w-0 flex-1">
+            <h3 className="truncate text-base font-semibold text-foreground">
+              {section.title}
+            </h3>
+            <p className="mt-0.5 text-xs text-text-secondary">
+              {total > 0
+                ? `${total} ${total === 1 ? "screen" : "screens"} in this section`
+                : "A single screen with nothing under it"}
+            </p>
+            <BlockedNote item={section} onJump={onJump} />
           </div>
-          <DependencyHints item={section} />
+          <VisibilityToggle item={section} busy={busy} onToggle={onToggle} />
         </div>
-
-        {section.subItems.length > 0 ? (
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => setExpanded((v) => !v)}
-            aria-label={`${expanded ? "Collapse" : "Expand"} ${section.title}`}
-            className="h-7 gap-1 px-2 text-[11px] text-text-secondary hover:bg-surface-hover"
-          >
-            {section.subItems.length}
-            <ChevronDown
-              className={cn(
-                "h-3.5 w-3.5 transition-transform",
-                expanded && "rotate-180",
-              )}
-            />
-          </Button>
+        {total > 0 && !section.hidden ? (
+          <ScreenMeter shown={shown} total={total} />
         ) : null}
-
-        <VisibilityToggle item={section} busy={busy} onToggle={onToggle} />
       </div>
 
-      {expanded && section.subItems.length > 0 ? (
-        <div className="divide-y divide-border border-t border-border">
-          {section.subItems.map((sub) => (
-            <SubItemRow key={sub.title} item={sub} busy={busy} onToggle={onToggle} />
-          ))}
+      {section.hidden && total > 0 ? (
+        <div className="flex items-start gap-2 border-b border-border bg-surface-card px-5 py-2.5 text-[11px] leading-relaxed text-text-tertiary">
+          <EyeOff className="mt-0.5 h-3 w-3 shrink-0" />
+          <p>
+            {section.title} is hidden, so none of these reach your sidebar. Their
+            own switches are remembered for when you show it again.
+          </p>
         </div>
       ) : null}
+
+      {total === 0 ? (
+        <p className="px-5 py-10 text-center text-xs text-text-tertiary">
+          {section.title} is one screen on its own — its switch is above.
+        </p>
+      ) : rows.length === 0 ? (
+        <p className="px-5 py-10 text-center text-xs text-text-tertiary">
+          No screen here is {FILTER_LABELS[filter].toLowerCase()}.
+        </p>
+      ) : (
+        <div className="divide-y divide-border">
+          {rows.map((sub) => (
+            <ScreenRow
+              key={sub.title}
+              item={sub}
+              section={section}
+              busy={busy}
+              flash={flash}
+              onToggle={onToggle}
+              onJump={onJump}
+              registerRow={registerRow}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
+
+// --- Surface -----------------------------------------------------------------
 
 export function NavVisibilitySettings({
   nav = [],
@@ -270,59 +388,146 @@ export function NavVisibilitySettings({
   className,
 }) {
   const [query, setQuery] = React.useState("");
+  const [filter, setFilter] = React.useState("all");
+  const [selected, setSelected] = React.useState("");
+  const [flash, setFlash] = React.useState("");
 
   const model = React.useMemo(
     () => navVisibilityModel({ nav, hidden, config }),
     [nav, hidden, config],
   );
 
+  const needle = query.trim().toLowerCase();
+
   const sections = React.useMemo(
-    () => model.sections.filter((section) => matches(query, section)),
-    [model.sections, query],
+    () => model.sections.filter((section) => isListed(section, filter, needle)),
+    [model.sections, filter, needle],
   );
 
-  const visibleCount = Math.max(0, model.total - model.hiddenCount);
+  // Falling back to the first listed section keeps the panel populated when a
+  // filter or a search drops whatever was open, without a reconciling effect.
+  const active =
+    sections.find((section) => section.title === selected) || sections[0] || null;
+
+  const rows = React.useMemo(
+    () => (active ? sectionRows(active, filter, needle) : []),
+    [active, filter, needle],
+  );
+
+  const counts = React.useMemo(() => {
+    const tally = { all: 0, shown: 0, hidden: 0, locked: 0 };
+    const count = (item) => {
+      tally.all += 1;
+      FILTERS.forEach((key) => {
+        if (key !== "all" && matchesFilter(item, key)) tally[key] += 1;
+      });
+    };
+    model.sections.forEach((section) => {
+      count(section);
+      section.subItems.forEach(count);
+    });
+    return tally;
+  }, [model.sections]);
+
+  const tabs = React.useMemo(
+    () =>
+      FILTERS.map((value) => ({
+        value,
+        label: `${FILTER_LABELS[value]} ${counts[value]}`,
+      })),
+    [counts],
+  );
+
+  // title -> the section it lives under, so a blocker chip knows where to go.
+  const ownerOf = React.useMemo(() => {
+    const map = new Map();
+    model.sections.forEach((section) => {
+      map.set(section.title, section.title);
+      section.subItems.forEach((sub) => map.set(sub.title, section.title));
+    });
+    return map;
+  }, [model.sections]);
+
+  const rowRefs = React.useRef(new Map());
+  const registerRow = React.useCallback((title, el) => {
+    if (el) rowRefs.current.set(title, el);
+    else rowRefs.current.delete(title);
+  }, []);
+
+  // Jumping clears the filter and the query first: landing on an entry the
+  // current view excludes would look like the chip did nothing.
+  const jumpTo = React.useCallback(
+    (title) => {
+      const owner = ownerOf.get(title);
+      if (!owner) return;
+      setQuery("");
+      setFilter("all");
+      setSelected(owner);
+      setFlash(title);
+    },
+    [ownerOf],
+  );
+
+  React.useEffect(() => {
+    if (!flash) return undefined;
+    rowRefs.current
+      .get(flash)
+      ?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    const id = setTimeout(() => setFlash(""), 1800);
+    return () => clearTimeout(id);
+  }, [flash, active]);
 
   return (
     <TooltipProvider>
       <div className={cn("space-y-4", className)}>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <VisibilitySummary
-            visible={visibleCount}
-            hiddenCount={model.hiddenCount}
-            total={model.total}
-            onReset={onReset}
-            busy={busy}
-          />
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <SegmentedTabs tabs={tabs} value={filter} onChange={setFilter} />
 
-          <ExpandableSearch
-            value={query}
-            onChange={setQuery}
-            placeholder="Search navigation…"
-            label="Search navigation"
-            className="ml-auto"
-          />
+          <div className="flex items-center gap-2 sm:ml-auto">
+            {/* Only offered when there is something to undo — its absence is the
+                "you're seeing everything" signal. */}
+            {onReset && model.hiddenCount > 0 ? (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={onReset}
+                disabled={busy}
+                className="h-8 gap-1.5 px-2 text-xs text-text-secondary hover:bg-surface-hover hover:text-foreground"
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                Show all
+              </Button>
+            ) : null}
+
+            <ExpandableSearch
+              value={query}
+              onChange={setQuery}
+              placeholder="Search navigation…"
+              label="Search navigation"
+            />
+          </div>
         </div>
 
-        {sections.length === 0 ? (
-          <div className="rounded-xl border border-border bg-surface-subtle px-5 py-10 text-center">
-            <p className="text-sm text-text-secondary">
-              Nothing matches “{query}”.
-            </p>
-          </div>
-        ) : (
-          <div className="grid gap-2">
-            {sections.map((section) => (
-              <SectionCard
-                key={section.title}
-                section={section}
-                busy={busy}
-                onToggle={onToggle}
-                defaultExpanded={Boolean(query)}
-              />
-            ))}
-          </div>
-        )}
+        <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,17rem)_minmax(0,1fr)]">
+          <SectionRail
+            sections={sections}
+            activeTitle={active?.title || ""}
+            flash={flash}
+            onSelect={setSelected}
+            registerRow={registerRow}
+          />
+          <SectionDetail
+            section={active}
+            rows={rows}
+            filter={filter}
+            busy={busy}
+            flash={flash}
+            onToggle={onToggle}
+            onJump={jumpTo}
+            registerRow={registerRow}
+          />
+        </div>
       </div>
     </TooltipProvider>
   );
