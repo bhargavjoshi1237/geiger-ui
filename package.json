@@ -10,7 +10,8 @@
   "exports": {
     ".": "./src/index.js",
     "./tokens.css": "./src/tokens.css",
-    "./lib/utils": "./src/lib/utils.js"
+    "./lib/utils": "./src/lib/utils.js",
+    "./*": "./src/ui/*.jsx"
   },
   "files": [
     "src"

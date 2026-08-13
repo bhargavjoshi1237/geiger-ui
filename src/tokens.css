@@ -205,6 +205,17 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Clears GlobalBanner; 0 unless BannerProvider set `has-banner`. */
+    padding-top: var(--geiger-banner-h);
+  }
+  /* Height of the banner strip above the topbar. Declaring it here means the
+     offset is right on the first paint of a server-rendered banner; offset a
+     fixed header with `top-[var(--geiger-banner-h,0px)]`. */
+  :root {
+    --geiger-banner-h: 0px;
+  }
+  :root.has-banner {
+    --geiger-banner-h: 2.25rem;
   }
 }
 
