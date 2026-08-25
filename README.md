@@ -54,6 +54,13 @@ Drop the app's own duplicated `:root` / `.dark` token blocks — `tokens.css` ow
 import { Button, Card, Sidebar } from "@geiger/ui";
 ```
 
+Each component file is also importable on its own, by its `src/ui/` file name, along with the `cn()` helper. Use these subpaths when you want one component without pulling in the whole barrel:
+
+```jsx
+import { Switch } from "@geiger/ui/switch";
+import { cn } from "@geiger/ui/lib/utils";
+```
+
 ## Layout
 
 ```
