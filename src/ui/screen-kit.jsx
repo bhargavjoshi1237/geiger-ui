@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ArrowDownRight, ArrowUpRight, Minus, Plus } from "lucide-react";
 
 import { cn } from "../lib/utils";
@@ -132,46 +132,88 @@ function parseNumericDisplay(value) {
   return { prefix, suffix, numeric, decimals, hasComma };
 }
 
-function formatNumericParts({ decimals, hasComma }, current) {
-  const fixed = Math.max(current, 0).toFixed(decimals);
-  const [intPart, decPart = ""] = fixed.split(".");
-  const formattedInt = hasComma ? Number(intPart).toLocaleString("en-US") : intPart;
-  return { formattedInt, decPart };
-}
+// The strip repeats 0 at the end so a wheel can roll past 9 into the next 0
+// without snapping backwards.
+const ROLL_STRIP = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+// Share of the run spent revealing new columns, one place at a time.
+const APPEAR_WINDOW = 0.55;
+const FADE_MS = 320;
+const WIDTH_MS = 180;
+// Extra full turns granted to the ones column, decaying towards the left.
+const MAX_EXTRA_TURNS = 3;
 
-// Splits a formatted number into stable, position-keyed slots so digits that
-// already existed keep their identity (and just roll) while a digit that's
-// newly appeared — e.g. going 9 -> 10 — mounts fresh and grows in.
-function toSlots(prefix, intStr, decStr, suffix) {
-  const slots = [];
-  prefix.split("").forEach((ch, i) => slots.push({ key: `pre-${i}`, ch }));
+const clamp01 = (n) => (n < 0 ? 0 : n > 1 ? 1 : n);
+const easeOut = (p) => 1 - Math.pow(1 - p, 3);
 
-  const intChars = intStr.split("");
-  const n = intChars.length;
-  intChars.forEach((ch, i) => {
-    slots.push({ key: `int-${n - 1 - i}`, ch });
-  });
+// Plans one wheel per digit place. Each wheel spins forward a bounded number of
+// turns onto its final digit rather than tracking the true running total: for a
+// value like 371,940 the low places would otherwise change thousands of times
+// per frame, which reads as noise instead of rolling.
+function buildPlan(from, to, parsed, duration) {
+  const { decimals } = parsed;
+  const scale = 10 ** decimals;
+  const toScaled = Math.round(Math.max(to, 0) * scale);
+  const fromScaled = Math.round(Math.max(from, 0) * scale);
+  const digits = String(toScaled).padStart(decimals + 1, "0");
+  const count = digits.length;
+  // Nothing to roll towards — a placeholder zero while a screen is still
+  // fetching, or a refetch that came back unchanged. The wheels must sit still.
+  const still = fromScaled === toScaled;
 
-  if (decStr) {
-    slots.push({ key: "dot", ch: "." });
-    decStr.split("").forEach((ch, i) => slots.push({ key: `dec-${i}`, ch }));
+  // Places the number hasn't grown into yet are revealed lowest-first — the
+  // 9 -> 10 moment, where a new wheel fades in beside the existing ones.
+  const appearing = [];
+  for (let place = decimals + 1; place < count; place += 1) {
+    if (!still && fromScaled < 10 ** place) appearing.push(place);
+  }
+  const revealSpan = duration * APPEAR_WINDOW;
+
+  const columns = [];
+  for (let place = 0; place < count; place += 1) {
+    const end = Number(digits[count - 1 - place]);
+    const start = still ? end : Math.floor(fromScaled / 10 ** place) % 10;
+    const rank = appearing.indexOf(place);
+    const isNew = rank !== -1;
+    const turns = Math.max(isNew ? 1 : 0, MAX_EXTRA_TURNS - place);
+    columns.push({
+      start,
+      isNew,
+      appearAt: isNew ? (revealSpan * (rank + 1)) / (appearing.length + 1) : 0,
+      travel: still ? 0 : ((end - start + 10) % 10) + turns * 10,
+    });
   }
 
-  suffix.split("").forEach((ch, i) => slots.push({ key: `suf-${i}`, ch }));
-  return slots;
+  return { to, duration, decimals, still, columns };
 }
 
-const ROLL_DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+// Resolves a column's wheel offset (in digit rows) plus its reveal progress at
+// the given point in the run.
+function columnState(column, elapsed, duration) {
+  const span = Math.max(duration - column.appearAt, 1);
+  const rolled = easeOut(clamp01((elapsed - column.appearAt) / span));
+  const since = elapsed - column.appearAt;
+  return {
+    offset: (column.start + column.travel * rolled) % 10,
+    opacity: column.isNew ? clamp01(since / FADE_MS) : 1,
+    width: column.isNew ? easeOut(clamp01(since / WIDTH_MS)) : 1,
+  };
+}
 
-function RollingDigit({ digit }) {
+function RollingWheel({ offset, opacity, width }) {
   return (
-    <span className="relative inline-block h-[1em] w-[1ch] overflow-hidden align-baseline">
+    <span
+      className="relative inline-block h-[1em] overflow-hidden align-baseline"
+      style={{ width: `${width}ch`, opacity }}
+    >
       <span
-        className="absolute inset-x-0 top-0 flex flex-col transition-transform duration-150 ease-out"
-        style={{ transform: `translateY(-${digit * 10}%)` }}
+        className="absolute left-0 top-0 flex w-[1ch] flex-col"
+        style={{ transform: `translateY(-${offset}em)` }}
       >
-        {ROLL_DIGITS.map((n) => (
-          <span key={n} className="flex h-[1em] items-center justify-center leading-none">
+        {ROLL_STRIP.map((n, i) => (
+          <span
+            key={i}
+            className="flex h-[1em] items-center justify-center leading-none"
+          >
             {n}
           </span>
         ))}
@@ -180,69 +222,105 @@ function RollingDigit({ digit }) {
   );
 }
 
-// A slot mounts at zero width/opacity and grows in — this is what makes a
-// newly-appearing digit (or comma) visibly "grow" instead of just popping in.
-function GrowSlot({ children }) {
-  const [grown, setGrown] = useState(false);
-
-  useEffect(() => {
-    const id = requestAnimationFrame(() => setGrown(true));
-    return () => cancelAnimationFrame(id);
-  }, []);
-
-  return (
-    <span
-      className="inline-block overflow-hidden align-baseline transition-[width,opacity] duration-300 ease-out"
-      style={{ width: grown ? "1ch" : "0ch", opacity: grown ? 1 : 0 }}
-    >
-      {children}
-    </span>
-  );
-}
-
-// Animates a stat value counting up from 0 (or from its previous value, on
-// later updates) to the target, with each digit rolling into place and newly
-// appearing digits growing in — e.g. crossing 9 -> 10 grows a new column.
-export function RollingNumber({ value, className, duration = 900 }) {
+// Animates a stat value up from 0 (or from its previous value, on later
+// updates): the ones wheel rolls first and every time the number grows past
+// another power of ten a fresh wheel fades in on the left, until all of them
+// settle on the target. A screen that renders its tiles before the fetch
+// resolves parks on a still 0 and only rolls once a real value lands.
+export function RollingNumber({ value, className, duration = 1100 }) {
   const parsed = useMemo(() => parseNumericDisplay(value), [value]);
-  const [display, setDisplay] = useState(0);
-  const fromRef = useRef(0);
+  const target = parsed ? parsed.numeric : 0;
+  const [plan, setPlan] = useState(() =>
+    parsed ? buildPlan(0, target, parsed, duration) : null,
+  );
+  const [elapsed, setElapsed] = useState(0);
 
   useEffect(() => {
-    if (!parsed) return undefined;
-    const from = fromRef.current;
-    const to = parsed.numeric;
-    const start = performance.now();
+    if (!parsed) return;
+    setPlan((prev) =>
+      prev && prev.to === target
+        ? prev
+        : buildPlan(prev ? prev.to : 0, target, parsed, duration),
+    );
+  }, [parsed, target, duration]);
+
+  useEffect(() => {
+    if (!plan || plan.still) return undefined;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      setElapsed(plan.duration);
+      return undefined;
+    }
+    const started = performance.now();
+    setElapsed(0);
     let frame = requestAnimationFrame(function tick(now) {
-      const t = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - t, 3);
-      const current = from + (to - from) * eased;
-      setDisplay(current);
-      if (t < 1) {
-        frame = requestAnimationFrame(tick);
-      } else {
-        fromRef.current = to;
-      }
+      const e = now - started;
+      setElapsed(Math.min(e, plan.duration));
+      if (e < plan.duration) frame = requestAnimationFrame(tick);
     });
     return () => cancelAnimationFrame(frame);
-  }, [parsed?.numeric, duration]);
+  }, [plan]);
 
+  // No number yet: an absent value parks on a still 0 so the tile reads as
+  // "nothing fetched" rather than empty, while a genuinely non-numeric label
+  // ("N/A", "—") is passed through untouched.
   if (!parsed) {
-    return <span className={cn("inline-flex tabular-nums", className)}>{value}</span>;
+    const pending = value === null || value === undefined || value === "";
+    return (
+      <span className={cn("inline-flex tabular-nums", className)}>
+        {pending ? <RollingWheel offset={0} opacity={1} width={1} /> : value}
+      </span>
+    );
   }
 
-  const { formattedInt, decPart } = formatNumericParts(parsed, display);
-  const slots = toSlots(parsed.prefix, formattedInt, decPart, parsed.suffix);
+  // A value just arrived but its plan lands on the next commit — hold at 0 for
+  // this frame so the final number never flashes in ahead of the roll.
+  if (!plan) {
+    return (
+      <span className={cn("inline-flex tabular-nums", className)}>
+        <RollingWheel offset={0} opacity={1} width={1} />
+      </span>
+    );
+  }
 
-  return (
-    <span className={cn("inline-flex tabular-nums", className)}>
-      {slots.map(({ key, ch }) => (
-        <GrowSlot key={key}>
-          {/\d/.test(ch) ? <RollingDigit digit={Number(ch)} /> : ch}
-        </GrowSlot>
-      ))}
-    </span>
-  );
+  const { columns, decimals } = plan;
+  const nodes = [];
+
+  parsed.prefix.split("").forEach((ch, i) => {
+    nodes.push(<span key={`pre-${i}`}>{ch}</span>);
+  });
+
+  for (let place = columns.length - 1; place >= decimals; place -= 1) {
+    const column = columns[place];
+    if (elapsed < column.appearAt) continue;
+    const state = columnState(column, elapsed, plan.duration);
+    nodes.push(<RollingWheel key={`int-${place}`} {...state} />);
+    const intPlace = place - decimals;
+    if (parsed.hasComma && intPlace > 0 && intPlace % 3 === 0) {
+      nodes.push(
+        <span key={`sep-${intPlace}`} style={{ opacity: state.opacity }}>
+          ,
+        </span>,
+      );
+    }
+  }
+
+  if (decimals > 0) {
+    nodes.push(<span key="dot">.</span>);
+    for (let place = decimals - 1; place >= 0; place -= 1) {
+      nodes.push(
+        <RollingWheel
+          key={`dec-${place}`}
+          {...columnState(columns[place], elapsed, plan.duration)}
+        />,
+      );
+    }
+  }
+
+  parsed.suffix.split("").forEach((ch, i) => {
+    nodes.push(<span key={`suf-${i}`}>{ch}</span>);
+  });
+
+  return <span className={cn("inline-flex tabular-nums", className)}>{nodes}</span>;
 }
 
 const STATS_BAR_COLS = {
