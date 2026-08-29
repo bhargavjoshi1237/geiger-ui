@@ -46,6 +46,7 @@ export * from "./ui/command-palette.jsx";
 export * from "./ui/expandable-search.jsx";
 export * from "./ui/global-banner.jsx";
 export * from "./ui/issue-item.jsx";
+export * from "./ui/screen-kit.jsx";
 export * from "./ui/search-bar.jsx";
 export * from "./ui/segmented-tabs.jsx";
 export * from "./ui/topbar.jsx";
