@@ -5,6 +5,22 @@ import { Search, X } from "lucide-react";
 import { Input } from "./input.jsx";
 import { cn } from "../lib/utils";
 
+// Adornments sit on the field's own gutter, measured from the same
+// --input-box-* tokens Input pads itself with, so the glyph lines up with the
+// text of every other field in the suite instead of a hardcoded 10px.
+// Written out in full rather than composed from parts: Tailwind scans source
+// text, so an interpolated class name never reaches the generated CSS.
+const ADORNMENT = "absolute top-1/2 size-4 -translate-y-1/2 text-muted-foreground";
+const LEAD_INSET = "left-[var(--input-box-padding-x,0.75rem)]";
+// The clear button is a 20px hit target around a 16px slot, so it sits half
+// that difference further out to keep both glyph centres on the same gutter.
+const TRAIL_INSET = "size-5 right-[calc(var(--input-box-padding-x,0.75rem)-0.125rem)]";
+// Gutter = the field's own padding + the icon + a token-sized gap after it.
+const GUTTER_START =
+  "pl-[calc(var(--input-box-padding-x,0.75rem)+1rem+var(--input-box-icon-gap,0.5rem))]";
+const GUTTER_END =
+  "pr-[calc(var(--input-box-padding-x,0.75rem)+1rem+var(--input-box-icon-gap,0.5rem))]";
+
 // Suite collapsible search: a bare search icon that expands into a field on
 // click, so a toolbar row keeps its space until the user actually searches.
 // Controlled on `value`/`onChange` (onChange receives the string, not an event);
@@ -56,13 +72,18 @@ export function ExpandableSearch({
     <div
       style={{ width: open ? expandedWidth : "2.25rem" }}
       className={cn(
-        "relative h-9 shrink-0 transition-[width] duration-200 ease-out",
+        // No fixed height: Input is !h-auto and sizes itself from the shared
+        // --input-box-* tokens, so an h-9 here left the field overflowing a
+        // 36px box and — because the adornments centre on THIS element —
+        // parked the glyphs a few pixels above the text. Hugging the field
+        // keeps top-1/2 honest and reports the real height to the toolbar row.
+        "relative flex min-h-9 shrink-0 items-center transition-[width] duration-200 ease-out",
         className,
       )}
     >
       {open ? (
         <>
-          <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className={cn(ADORNMENT, "pointer-events-none", LEAD_INSET)} />
           <Input
             ref={inputRef}
             type="search"
@@ -75,8 +96,9 @@ export function ExpandableSearch({
               if (!value) setOpen(false);
             }}
             className={cn(
-              "h-9 w-full bg-surface-card pl-8",
-              value ? "pr-8" : "pr-3",
+              "block w-full bg-surface-card",
+              GUTTER_START,
+              value && GUTTER_END,
               inputClassName,
             )}
           />
@@ -91,7 +113,11 @@ export function ExpandableSearch({
                 onChange?.("");
                 inputRef.current?.focus();
               }}
-              className="absolute right-2 top-1/2 flex size-5 -translate-y-1/2 items-center justify-center rounded text-muted-foreground transition-colors hover:text-foreground"
+              className={cn(
+                ADORNMENT,
+                TRAIL_INSET,
+                "flex items-center justify-center rounded-sm transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              )}
             >
               <X className="size-3.5" />
             </button>
