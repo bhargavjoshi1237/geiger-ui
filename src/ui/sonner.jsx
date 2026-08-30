@@ -40,7 +40,7 @@ const DEFAULT_ICONS = {
   success: <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400" />,
   info: <Info className="size-4 text-blue-600 dark:text-blue-400" />,
   warning: <AlertTriangle className="size-4 text-amber-600 dark:text-amber-400" />,
-  error: <AlertCircle className="size-4 text-destructive" />,
+  error: <AlertCircle className="size-4 text-destructive-text" />,
   loading: <Loader2 className="size-4 animate-spin text-muted-foreground" />,
   close: <X className="size-3.5" />,
 };
@@ -57,7 +57,7 @@ const Toaster = ({ icons, toastOptions, ...props }) => {
         ...toastOptions,
         classNames: {
           toast:
-            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
+            "group toast group-[.toaster]:bg-surface-dialog group-[.toaster]:text-foreground group-[.toaster]:border-border-strong group-[.toaster]:shadow-lg",
           title: "capitalize",
           description: "capitalize group-[.toast]:text-muted-foreground",
           icon: ICON_SLOT,

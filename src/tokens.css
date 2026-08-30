@@ -38,6 +38,7 @@
   --color-border: var(--border);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-text: var(--destructive-text);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -107,6 +108,8 @@
   --accent-foreground: oklch(0.21 0.006 285.885);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: #ffffff;
+  /* Danger text/icons. --destructive is a fill and is illegible as text on dark. */
+  --destructive-text: #b91c1c;
   --border: oklch(0.92 0.004 286.32);
   --input: oklch(0.92 0.004 286.32);
   --ring: oklch(0.705 0.015 286.067);
@@ -165,6 +168,7 @@
   --accent-foreground: #e7e7e7;
   --destructive: #7f1d1d;
   --destructive-foreground: #ffffff;
+  --destructive-text: #f87171;
   --border: #333333;
   --input: #242424;
   --ring: #474747;

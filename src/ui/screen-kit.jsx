@@ -58,7 +58,7 @@ export function EditorSectionHeader({ title, description, action, className }) {
         ) : null}
       </div>
       {action ? (
-        <div className="flex shrink-0 flex-wrap items-center gap-2">{action}</div>
+        <div className="flex shrink-0 flex-wrap items-center gap-2 capitalize">{action}</div>
       ) : null}
     </div>
   );
