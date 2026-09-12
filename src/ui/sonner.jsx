@@ -53,6 +53,11 @@ const Toaster = ({ icons, toastOptions, ...props }) => {
       theme={theme}
       className="toaster group"
       icons={{ ...DEFAULT_ICONS, ...icons }}
+      style={{
+        "--normal-bg": "var(--surface-dialog)",
+        "--normal-text": "var(--foreground)",
+        "--normal-border": "var(--border-strong)",
+      }}
       toastOptions={{
         ...toastOptions,
         classNames: {

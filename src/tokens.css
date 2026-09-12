@@ -300,3 +300,440 @@
     left: 100%;
   }
 }
+
+/* LogoLoading — Geiger mark loading treatments. One `data-variant` per
+   animation; `.gl-bar` is one of the mark's 3 paths, timed via :nth-child. */
+.geiger-loading {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.geiger-loading svg {
+  overflow: visible;
+}
+
+.geiger-loading[data-variant="neon-start"] .gl-bar {
+  filter: drop-shadow(0 0 14px var(--gl-accent, #e7e7e7));
+  animation: gl-neon calc(3.2s / var(--gl-speed, 1)) steps(1, end) infinite;
+}
+.geiger-loading[data-variant="neon-start"] .gl-bar:nth-child(2) {
+  animation-delay: calc(0.06s / var(--gl-speed, 1));
+}
+.geiger-loading[data-variant="neon-start"] .gl-bar:nth-child(3) {
+  animation-delay: calc(0.12s / var(--gl-speed, 1));
+}
+
+.geiger-loading[data-variant="burst"] .gl-mark {
+  filter: drop-shadow(0 0 16px var(--gl-accent, #e7e7e7));
+  animation: gl-burst calc(1.6s / var(--gl-speed, 1)) steps(1, end) infinite;
+}
+
+.geiger-loading[data-variant="countdown"] .gl-bar {
+  filter: drop-shadow(0 0 14px var(--gl-accent, #e7e7e7));
+}
+.geiger-loading[data-variant="countdown"] .gl-bar:nth-child(1) {
+  animation: gl-lad1 calc(2.4s / var(--gl-speed, 1)) steps(1, end) infinite;
+}
+.geiger-loading[data-variant="countdown"] .gl-bar:nth-child(2) {
+  animation: gl-lad2 calc(2.4s / var(--gl-speed, 1)) steps(1, end) infinite;
+}
+.geiger-loading[data-variant="countdown"] .gl-bar:nth-child(3) {
+  animation: gl-lad3 calc(2.4s / var(--gl-speed, 1)) steps(1, end) infinite;
+}
+
+.geiger-loading[data-variant="dying-bulb"] .gl-bar {
+  filter: drop-shadow(0 0 12px var(--gl-accent, #e7e7e7));
+  animation: gl-bulb calc(3.6s / var(--gl-speed, 1)) steps(1, end) infinite;
+}
+.geiger-loading[data-variant="dying-bulb"] .gl-bar:nth-child(2) {
+  animation-delay: calc(0.5s / var(--gl-speed, 1));
+}
+.geiger-loading[data-variant="dying-bulb"] .gl-bar:nth-child(3) {
+  animation-delay: calc(1s / var(--gl-speed, 1));
+}
+
+.geiger-loading[data-variant="fuse-relay"] .gl-bar {
+  filter: drop-shadow(0 0 14px var(--gl-accent, #e7e7e7));
+  animation: gl-fuse calc(1.8s / var(--gl-speed, 1)) steps(1, end) infinite;
+}
+.geiger-loading[data-variant="fuse-relay"] .gl-bar:nth-child(2) {
+  animation-delay: calc(0.22s / var(--gl-speed, 1));
+}
+.geiger-loading[data-variant="fuse-relay"] .gl-bar:nth-child(3) {
+  animation-delay: calc(0.44s / var(--gl-speed, 1));
+}
+
+.geiger-loading[data-variant="arc-flicker"] .gl-bar {
+  filter: drop-shadow(0 0 12px rgb(255 255 255 / 0.7));
+  animation: gl-arc calc(2.6s / var(--gl-speed, 1)) steps(1, end) infinite;
+}
+.geiger-loading[data-variant="arc-flicker"] .gl-bar:nth-child(2) {
+  animation-delay: calc(0.34s / var(--gl-speed, 1));
+}
+.geiger-loading[data-variant="arc-flicker"] .gl-bar:nth-child(3) {
+  animation-delay: calc(0.71s / var(--gl-speed, 1));
+}
+
+.geiger-loading[data-variant="ghost-trace"] .gl-bar {
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 4;
+  stroke-dasharray: 100;
+  animation:
+    gl-n-draw calc(3.4s / var(--gl-speed, 1)) cubic-bezier(0.65, 0, 0.35, 1) infinite,
+    gl-n-ink calc(3.4s / var(--gl-speed, 1)) linear infinite,
+    gl-n-stroke calc(3.4s / var(--gl-speed, 1)) linear infinite;
+}
+.geiger-loading[data-variant="ghost-trace"] .gl-bar:nth-child(2) {
+  animation-delay: calc(0.15s / var(--gl-speed, 1));
+}
+.geiger-loading[data-variant="ghost-trace"] .gl-bar:nth-child(3) {
+  animation-delay: calc(0.3s / var(--gl-speed, 1));
+}
+
+.geiger-loading[data-variant="sequential-strobe"] .gl-bar {
+  filter: drop-shadow(0 0 14px var(--gl-accent, #e7e7e7));
+  animation: gl-strobe calc(1.5s / var(--gl-speed, 1)) steps(1, end) infinite;
+}
+.geiger-loading[data-variant="sequential-strobe"] .gl-bar:nth-child(2) {
+  animation-delay: calc(0.09s / var(--gl-speed, 1));
+}
+.geiger-loading[data-variant="sequential-strobe"] .gl-bar:nth-child(3) {
+  animation-delay: calc(0.18s / var(--gl-speed, 1));
+}
+
+.geiger-loading[data-variant="static-crackle"] .gl-bar {
+  filter: drop-shadow(0 0 13px var(--gl-accent, #e7e7e7));
+  animation: gl-crackle calc(2.2s / var(--gl-speed, 1)) steps(1, end) infinite;
+}
+.geiger-loading[data-variant="static-crackle"] .gl-bar:nth-child(2) {
+  animation-delay: calc(0.04s / var(--gl-speed, 1));
+}
+.geiger-loading[data-variant="static-crackle"] .gl-bar:nth-child(3) {
+  animation-delay: calc(0.09s / var(--gl-speed, 1));
+}
+
+.geiger-loading[data-variant="warning-flash"] .gl-bar {
+  filter: drop-shadow(0 0 15px var(--gl-accent, #e7e7e7));
+  animation: gl-warn calc(2.4s / var(--gl-speed, 1)) steps(1, end) infinite;
+}
+.geiger-loading[data-variant="warning-flash"] .gl-bar:nth-child(2) {
+  animation-delay: calc(0.08s / var(--gl-speed, 1));
+}
+.geiger-loading[data-variant="warning-flash"] .gl-bar:nth-child(3) {
+  animation-delay: calc(0.16s / var(--gl-speed, 1));
+}
+
+.geiger-loading[data-variant="short-circuit"] .gl-bar {
+  filter: drop-shadow(0 0 14px var(--gl-accent, #e7e7e7));
+  animation: gl-short calc(2s / var(--gl-speed, 1)) steps(1, end) infinite;
+}
+.geiger-loading[data-variant="short-circuit"] .gl-bar:nth-child(2) {
+  animation-delay: calc(0.05s / var(--gl-speed, 1));
+}
+.geiger-loading[data-variant="short-circuit"] .gl-bar:nth-child(3) {
+  animation-delay: calc(0.1s / var(--gl-speed, 1));
+}
+
+.geiger-loading[data-variant="heartbeat-pulse"] .gl-bar {
+  filter: drop-shadow(0 0 12px var(--gl-accent, #e7e7e7));
+  animation: gl-heartbeat calc(1.8s / var(--gl-speed, 1)) ease-in-out infinite;
+}
+.geiger-loading[data-variant="heartbeat-pulse"] .gl-bar:nth-child(2) {
+  animation-delay: calc(0.6s / var(--gl-speed, 1));
+}
+.geiger-loading[data-variant="heartbeat-pulse"] .gl-bar:nth-child(3) {
+  animation-delay: calc(1.2s / var(--gl-speed, 1));
+}
+
+.geiger-loading[data-variant="counter-ticks"] .gl-bar {
+  filter: drop-shadow(0 0 13px var(--gl-accent, #e7e7e7));
+}
+.geiger-loading[data-variant="counter-ticks"] .gl-bar:nth-child(1) {
+  animation: gl-tick-a calc(1.7s / var(--gl-speed, 1)) steps(1, end) infinite;
+}
+.geiger-loading[data-variant="counter-ticks"] .gl-bar:nth-child(2) {
+  animation: gl-tick-b calc(1.7s / var(--gl-speed, 1)) steps(1, end) infinite;
+}
+.geiger-loading[data-variant="counter-ticks"] .gl-bar:nth-child(3) {
+  animation: gl-tick-c calc(1.7s / var(--gl-speed, 1)) steps(1, end) infinite;
+}
+
+.geiger-loading[data-variant="baton-sweep"] .gl-sweep-rect {
+  animation: gl-sweep calc(2.6s / var(--gl-speed, 1)) linear infinite;
+}
+
+.geiger-loading[data-variant="trace-ink"] .gl-bar {
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 5;
+  stroke-dasharray: 100;
+  animation:
+    gl-draw calc(3s / var(--gl-speed, 1)) ease-in-out infinite,
+    gl-ink calc(3s / var(--gl-speed, 1)) linear infinite;
+}
+.geiger-loading[data-variant="trace-ink"] .gl-bar:nth-child(2) {
+  animation-delay: calc(0.16s / var(--gl-speed, 1));
+}
+.geiger-loading[data-variant="trace-ink"] .gl-bar:nth-child(3) {
+  animation-delay: calc(0.32s / var(--gl-speed, 1));
+}
+
+.geiger-loading[data-variant="axis-slide"] .gl-bar {
+  animation: gl-slide calc(2.4s / var(--gl-speed, 1)) cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+.geiger-loading[data-variant="axis-slide"] .gl-bar:nth-child(2) {
+  animation-delay: calc(0.1s / var(--gl-speed, 1));
+}
+.geiger-loading[data-variant="axis-slide"] .gl-bar:nth-child(3) {
+  animation-delay: calc(0.2s / var(--gl-speed, 1));
+}
+
+.geiger-loading[data-variant="elastic-pop"] .gl-bar {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: gl-pop calc(2.4s / var(--gl-speed, 1)) cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+.geiger-loading[data-variant="elastic-pop"] .gl-bar:nth-child(2) {
+  animation-delay: calc(0.11s / var(--gl-speed, 1));
+}
+.geiger-loading[data-variant="elastic-pop"] .gl-bar:nth-child(3) {
+  animation-delay: calc(0.22s / var(--gl-speed, 1));
+}
+
+.geiger-loading[data-variant="relay-pulse"] .gl-bar {
+  animation: gl-relay calc(1.5s / var(--gl-speed, 1)) ease-in-out infinite;
+}
+.geiger-loading[data-variant="relay-pulse"] .gl-bar:nth-child(2) {
+  animation-delay: calc(0.18s / var(--gl-speed, 1));
+}
+.geiger-loading[data-variant="relay-pulse"] .gl-bar:nth-child(3) {
+  animation-delay: calc(0.36s / var(--gl-speed, 1));
+}
+
+.geiger-loading[data-variant="signal-glitch"] .gl-glitch-frame {
+  position: relative;
+  display: inline-block;
+  animation: gl-glitch calc(3.2s / var(--gl-speed, 1)) steps(1, end) infinite;
+}
+.geiger-loading[data-variant="signal-glitch"] .gl-fringe {
+  position: absolute;
+  inset: 0;
+  animation: gl-fringe calc(3.2s / var(--gl-speed, 1)) steps(1, end) infinite;
+}
+.geiger-loading[data-variant="signal-glitch"] .gl-fringe.gl-fringe-b {
+  animation-delay: calc(0.06s / var(--gl-speed, 1));
+}
+.geiger-loading[data-variant="signal-glitch"] .gl-glitch-top {
+  position: relative;
+  display: block;
+}
+
+@keyframes gl-neon {
+  0%, 3% { opacity: .06; }
+  4%, 6% { opacity: 1; }
+  7%, 11% { opacity: .06; }
+  12%, 14% { opacity: .85; }
+  15%, 22% { opacity: .06; }
+  23%, 26% { opacity: 1; }
+  27%, 30% { opacity: .06; }
+  31%, 86% { opacity: 1; }
+  88%, 100% { opacity: .06; }
+}
+@keyframes gl-burst {
+  0%, 3% { opacity: 1; }
+  4%, 7% { opacity: .05; }
+  8%, 11% { opacity: 1; }
+  12%, 15% { opacity: .05; }
+  16%, 19% { opacity: 1; }
+  20%, 23% { opacity: .05; }
+  24%, 27% { opacity: 1; }
+  28%, 100% { opacity: .05; }
+}
+@keyframes gl-lad1 {
+  0%, 5% { opacity: 1; }
+  7%, 100% { opacity: .06; }
+}
+@keyframes gl-lad2 {
+  0%, 14% { opacity: .06; }
+  16%, 21% { opacity: 1; }
+  23%, 27% { opacity: .06; }
+  29%, 34% { opacity: 1; }
+  36%, 100% { opacity: .06; }
+}
+@keyframes gl-lad3 {
+  0%, 42% { opacity: .06; }
+  44%, 48% { opacity: 1; }
+  50%, 54% { opacity: .06; }
+  56%, 60% { opacity: 1; }
+  62%, 66% { opacity: .06; }
+  68%, 72% { opacity: 1; }
+  74%, 100% { opacity: .06; }
+}
+@keyframes gl-bulb {
+  0%, 18% { opacity: .32; }
+  20%, 24% { opacity: 1; }
+  26%, 40% { opacity: .18; }
+  42% { opacity: .8; }
+  44%, 58% { opacity: .32; }
+  60%, 62% { opacity: 1; }
+  64%, 76% { opacity: .1; }
+  78%, 82% { opacity: .6; }
+  84%, 100% { opacity: .28; }
+}
+@keyframes gl-fuse {
+  0%, 2% { opacity: 1; }
+  4%, 6% { opacity: .06; }
+  8%, 13% { opacity: 1; }
+  15%, 100% { opacity: .06; }
+}
+@keyframes gl-arc {
+  0% { opacity: 1; }
+  3% { opacity: .08; }
+  6% { opacity: 1; }
+  9% { opacity: .15; }
+  12% { opacity: 1; }
+  15%, 29% { opacity: .06; }
+  31% { opacity: 1; }
+  34%, 66% { opacity: .06; }
+  68% { opacity: 1; }
+  71%, 100% { opacity: .06; }
+}
+@keyframes gl-strobe {
+  0% { opacity: 1; }
+  8% { opacity: .07; }
+  16% { opacity: 1; }
+  24% { opacity: .07; }
+  32% { opacity: 1; }
+  40%, 100% { opacity: .07; }
+}
+@keyframes gl-crackle {
+  0% { opacity: 1; }
+  2% { opacity: .1; }
+  5% { opacity: 1; }
+  6% { opacity: .05; }
+  9% { opacity: 1; }
+  11% { opacity: .08; }
+  14% { opacity: 1; }
+  17% { opacity: .06; }
+  22% { opacity: 1; }
+  24% { opacity: .05; }
+  29% { opacity: 1; }
+  33%, 58% { opacity: .06; }
+  61% { opacity: 1; }
+  64%, 100% { opacity: .06; }
+}
+@keyframes gl-warn {
+  0% { opacity: 1; }
+  6% { opacity: .08; }
+  12% { opacity: 1; }
+  18%, 50% { opacity: .08; }
+  56% { opacity: 1; }
+  62%, 100% { opacity: .08; }
+}
+@keyframes gl-short {
+  0% { opacity: 1; }
+  3% { opacity: .1; }
+  6% { opacity: 1; }
+  8% { opacity: .1; }
+  10% { opacity: 1; }
+  12% { opacity: .06; }
+  14% { opacity: .9; }
+  16% { opacity: .06; }
+  18% { opacity: .8; }
+  20%, 44% { opacity: 0; }
+  46%, 100% { opacity: 1; }
+}
+@keyframes gl-heartbeat {
+  0% { opacity: .15; }
+  8% { opacity: 1; }
+  16% { opacity: .35; }
+  24% { opacity: 1; }
+  32%, 100% { opacity: .15; }
+}
+@keyframes gl-tick-a {
+  0% { opacity: 1; }
+  4% { opacity: .08; }
+  7% { opacity: 1; }
+  9%, 31% { opacity: .08; }
+  34% { opacity: 1; }
+  37%, 68% { opacity: .08; }
+  71% { opacity: 1; }
+  74%, 100% { opacity: .08; }
+}
+@keyframes gl-tick-b {
+  0%, 18% { opacity: .08; }
+  21% { opacity: 1; }
+  24%, 52% { opacity: .08; }
+  55% { opacity: 1; }
+  58%, 89% { opacity: .08; }
+  92% { opacity: 1; }
+  95%, 100% { opacity: .08; }
+}
+@keyframes gl-tick-c {
+  0%, 12% { opacity: .08; }
+  15% { opacity: 1; }
+  18%, 44% { opacity: .08; }
+  47% { opacity: 1; }
+  50%, 80% { opacity: .08; }
+  83% { opacity: 1; }
+  86%, 100% { opacity: .08; }
+}
+@keyframes gl-sweep {
+  0% { transform: translateX(-340px) skewX(-37.6deg); }
+  100% { transform: translateX(660px) skewX(-37.6deg); }
+}
+@keyframes gl-n-draw {
+  0% { stroke-dashoffset: 100; }
+  40%, 96% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 100; }
+}
+@keyframes gl-n-ink {
+  0%, 34% { fill-opacity: 0; }
+  58%, 88% { fill-opacity: 1; }
+  96%, 100% { fill-opacity: 0; }
+}
+@keyframes gl-n-stroke {
+  0%, 50% { stroke-opacity: 1; }
+  72%, 96% { stroke-opacity: 0; }
+  100% { stroke-opacity: 1; }
+}
+@keyframes gl-draw {
+  0% { stroke-dashoffset: 100; }
+  42% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 0; }
+}
+@keyframes gl-ink {
+  0%, 38% { fill-opacity: 0; }
+  66%, 100% { fill-opacity: 1; }
+}
+@keyframes gl-slide {
+  0% { opacity: 0; transform: translate(-90px, 52px); }
+  22%, 68% { opacity: 1; transform: translate(0, 0); }
+  100% { opacity: 0; transform: translate(90px, -52px); }
+}
+@keyframes gl-pop {
+  0% { opacity: 0; transform: scale(.35); }
+  18% { opacity: 1; transform: scale(1.14); }
+  28%, 74% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(.8); }
+}
+@keyframes gl-relay {
+  0%, 100% { opacity: .14; }
+  32% { opacity: 1; }
+}
+@keyframes gl-glitch {
+  0%, 72%, 100% { transform: translate(0, 0); }
+  74% { transform: translate(-5px, 2px); }
+  77% { transform: translate(4px, -3px); }
+  80% { transform: translate(-2px, 0); }
+  83% { transform: translate(0, 0); }
+}
+@keyframes gl-fringe {
+  0%, 72%, 100% { opacity: 0; transform: translate(0, 0); }
+  75% { opacity: .9; transform: translate(-7px, 0); }
+  82% { opacity: .6; transform: translate(5px, 0); }
+  86% { opacity: 0; }
+}
