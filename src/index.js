@@ -54,6 +54,8 @@ export * from "./ui/logo-loading.jsx";
 export * from "./ui/screen-kit.jsx";
 export * from "./ui/search-bar.jsx";
 export * from "./ui/segmented-tabs.jsx";
+export * from "./ui/suite-header.jsx";
+export * from "./ui/suite-mega-menu.jsx";
 export * from "./ui/topbar.jsx";
 
 // Default-export components (re-exported as named)
