@@ -182,6 +182,73 @@ Per repo, in order:
 Assertions 2 and 3 are expected to return zero *in-scope* hits. Out-of-scope hits
 (buttons, inline, `h-3`) remain and are correct.
 
+## Corrections made during implementation
+
+The survey above was written before the code was touched. Five things it got
+wrong, recorded here because the spec is the artifact people will read:
+
+1. **`geiger-comms/components/widget/` is out of scope.** It has its own
+   `widget.css` with `gc-`-prefixed classes and zero `@geiger/ui` imports — the
+   embeddable customer widget, deliberately isolated so it ships without the
+   design system. Importing a geiger-ui component there would pull the library
+   into the widget bundle. Its `LoadingState` keeps its CSS spinner. That drops
+   the app-local wrapper count from seven to six.
+
+2. **App-local `LoadingArea` maps to `LoadingArea`, not `LoadingScreen`.** The
+   spec assumed these were full-page gates. They are not: geiger-events renders
+   `<LoadingArea />` inside screens (`affiliates_roster`, `packages_settings`,
+   `addons_settings`) as well as at route level, and the markup is `h-full`, not
+   full-viewport. `LoadingScreen`'s `min-h-screen` would have broken every
+   nested case. `LoadingScreen` is used only where the container really was
+   full-viewport: geiger-flow's three Suspense fallbacks and route `loading.jsx`,
+   and geiger-campaign's home fallback.
+
+3. **Most containers are kept, not replaced.** Only the uniform generic panel
+   shape became `<LoadingArea panel />`. The rest of the containers are
+   load-bearing — `h-64` panels, `aspect-square` thumbnail tiles,
+   `absolute inset-0` video overlays, `text-white/50` on dark — so they are left
+   untouched and only their contents change to `<LogoLoading size={40} />`.
+   `LogoLoading` renders with `fill="currentColor"`, so the white-on-dark
+   overlays keep working. This trades some container duplication for zero layout
+   regression, which is the right way round.
+
+4. **Spinners are not all `Loader2`.** Also found and converted: hand-rolled CSS
+   ring spinners (`animate-spin rounded-full border-2`) in geiger-flow, and
+   `animate-pulse` on a themed icon (`Upload`, `Inbox`) in two geiger-flow
+   screens. The assertion greps were extended to cover both.
+
+5. **Two sites that look in scope are not.** `geiger-notes` `UserDrawer` renders
+   a spinner beside "Waiting for host approval" — a persistent status pill, not a
+   fetch placeholder. `geiger-dash` `organizations-client` shows "Checking
+   availability…" inline beside a domain input. Both keep their spinners.
+
+Two components had a caption that was not a static string and were handled
+individually rather than by pattern: `geiger-comms` `agent/actions.jsx`
+(`Loading ${showingProcedures ? "procedures" : "actions"}`) and geiger-events
+`brand_import.jsx` (`Reading ${url}`) / `event_conference.jsx`
+(`Loading ${tabTitle}`). Their captions became template-literal `label` values.
+
+### Result
+
+| Repo | LoadingArea | LoadingScreen | LogoLoading | Total |
+| --- | --- | --- | --- | --- |
+| geiger-events | 23 | 0 | 108 | 131 |
+| geiger-comms | 56 | 0 | 7 | 63 |
+| geiger-flow | 4 | 4 | 34 | 42 |
+| geiger-assets | 0 | 0 | 28 | 28 |
+| geiger-dash | 1 | 0 | 10 | 11 |
+| geiger-property | 6 | 0 | 3 | 9 |
+| geiger-forms | 1 | 0 | 5 | 6 |
+| geiger-campaign | 3 | 1 | 0 | 4 |
+| geiger-content | 4 | 0 | 0 | 4 |
+| geiger-notes | 0 | 0 | 4 | 4 |
+
+302 loading call sites, all on the house mark. Verified: 268 files parse clean,
+zero missing or dead imports, `next build` green on all ten apps. The assertion
+greps return three caption hits and five spinner hits, each confirmed out of
+scope by the criteria above (two skeletons, one `sr-only`, one status pill, one
+inline domain check, and three in-button spinners).
+
 ## Risks
 
 - **The pin bump touches all 10 apps.** A bad geiger-ui commit breaks the suite at
