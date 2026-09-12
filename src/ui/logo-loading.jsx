@@ -42,6 +42,9 @@ export const LOGO_LOADING_VARIANTS = [
 
 const VARIANT_IDS = LOGO_LOADING_VARIANTS.map((v) => v.id);
 
+// Drawn on the server and on the first client paint, before the random roll lands.
+const DEFAULT_VARIANT = LOGO_LOADING_VARIANTS[0].id;
+
 function normalizeVariantId(name) {
   if (!name) return null;
   const slug = String(name)
@@ -194,7 +197,13 @@ export const CounterTicksLoading = makeVariantComponent("counter-ticks", "Counte
 // treatment, or omit it to get a weighted-random pick made once per mount.
 export function LogoLoading({ name, ...props }) {
   const requested = normalizeVariantId(name);
-  const [fallback] = React.useState(pickWeightedVariant);
-  const variant = requested ?? fallback;
+  // Rolled after mount, never during render: SSR and hydration would otherwise
+  // draw different variants, and variant decides DOM shape (baton-sweep and
+  // signal-glitch build their own subtrees), so the mismatch is structural.
+  const [picked, setPicked] = React.useState(null);
+  React.useEffect(() => {
+    if (!requested) setPicked(pickWeightedVariant());
+  }, [requested]);
+  const variant = requested ?? picked ?? DEFAULT_VARIANT;
   return <LogoLoadingBase variant={variant} {...props} />;
 }
