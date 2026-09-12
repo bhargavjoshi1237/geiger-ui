@@ -10,6 +10,7 @@
   "exports": {
     ".": "./src/index.js",
     "./tokens.css": "./src/tokens.css",
+    "./logo-loading.css": "./src/logo-loading.css",
     "./lib/utils": "./src/lib/utils.js",
     "./*": "./src/ui/*.jsx"
   },
