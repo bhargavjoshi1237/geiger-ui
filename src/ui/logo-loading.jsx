@@ -193,17 +193,30 @@ export const ShortCircuitLoading = makeVariantComponent("short-circuit", "ShortC
 export const HeartbeatPulseLoading = makeVariantComponent("heartbeat-pulse", "HeartbeatPulseLoading");
 export const CounterTicksLoading = makeVariantComponent("counter-ticks", "CounterTicksLoading");
 
+// Flipped once the first client render has committed. A mount before that point
+// may be hydrating server-rendered HTML, so it has to keep the variant the
+// server drew; a mount after it — a dialog body, a lazily imported canvas,
+// anything opened by interaction — has no server markup to match and is free to
+// roll. Never set on the server: effects don't run there, so it stays false.
+let clientMounted = false;
+
 // Umbrella component — pass `name` (id or label, e.g. "Neon start") to pin a
 // treatment, or omit it to get a weighted-random pick made once per mount.
 export function LogoLoading({ name, ...props }) {
   const requested = normalizeVariantId(name);
-  // Rolled after mount, never during render: SSR and hydration would otherwise
-  // draw different variants, and variant decides DOM shape (baton-sweep and
-  // signal-glitch build their own subtrees), so the mismatch is structural.
-  const [picked, setPicked] = React.useState(null);
+  // Rolled in the initializer so the variant is settled before this mount's
+  // first frame and never changes again. Swapping it mid-flight restarted the
+  // animation as a different mark, which read as the loader starting over —
+  // and because variant decides DOM shape (baton-sweep and signal-glitch build
+  // their own subtrees), rolling while hydrating is a structural mismatch.
+  const [picked] = React.useState(() =>
+    requested || !clientMounted ? null : pickWeightedVariant()
+  );
+
   React.useEffect(() => {
-    if (!requested) setPicked(pickWeightedVariant());
-  }, [requested]);
+    clientMounted = true;
+  }, []);
+
   const variant = requested ?? picked ?? DEFAULT_VARIANT;
   return <LogoLoadingBase variant={variant} {...props} />;
 }
