@@ -232,8 +232,8 @@ individually rather than by pattern: `geiger-comms` `agent/actions.jsx`
 
 | Repo | LoadingArea | LoadingScreen | LogoLoading | Total |
 | --- | --- | --- | --- | --- |
-| geiger-events | 23 | 0 | 108 | 131 |
-| geiger-comms | 56 | 0 | 7 | 63 |
+| geiger-events | 23 | 0 | 112 | 135 |
+| geiger-comms | 56 | 0 | 8 | 64 |
 | geiger-flow | 4 | 4 | 34 | 42 |
 | geiger-assets | 0 | 0 | 28 | 28 |
 | geiger-dash | 1 | 0 | 10 | 11 |
@@ -243,11 +243,19 @@ individually rather than by pattern: `geiger-comms` `agent/actions.jsx`
 | geiger-content | 4 | 0 | 0 | 4 |
 | geiger-notes | 0 | 0 | 4 | 4 |
 
-302 loading call sites, all on the house mark. Verified: 268 files parse clean,
-zero missing or dead imports, `next build` green on all ten apps. The assertion
-greps return three caption hits and five spinner hits, each confirmed out of
-scope by the criteria above (two skeletons, one `sr-only`, one status pill, one
-inline domain check, and three in-button spinners).
+307 loading call sites, all on the house mark. Verified: 271 files parse clean,
+zero missing or dead imports, `next build` green on all ten apps.
+
+A sixth correction, found by the verification greps rather than the survey:
+**left-aligned block loaders.** Five sites used
+`flex items-center gap-2 py-4` with no `justify-center`, so a centering-based
+matcher skipped them while they were plainly block loaders — including a local
+`LoadingEvents` component in geiger-events `detail_fields.jsx` used at two call
+sites. These keep their left alignment and only swap contents.
+
+The assertion greps finish with four hits, each confirmed out of scope: two
+skeletons (`CanvasSkeleton`, `table_skeleton`'s `sr-only`) and the inline
+domain-availability check in geiger-dash `organizations-client.jsx`.
 
 ## Risks
 
