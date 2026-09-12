@@ -9,6 +9,7 @@ import { Card, CardContent } from "./card.jsx";
 import { Badge } from "./badge.jsx";
 import { Switch } from "./switch.jsx";
 import { ExpandableSearch } from "./expandable-search.jsx";
+import { LogoLoading } from "./logo-loading.jsx";
 import {
   Table,
   TableBody,
@@ -531,6 +532,56 @@ export function EmptyState({
         ) : null}
       </div>
       {action ? <div className="mt-1">{action}</div> : null}
+    </div>
+  );
+}
+
+// LoadingArea / LoadingScreen — the block-level loading states. EmptyState's
+// container grammar with the animated mark in place of the icon-and-copy stack,
+// because "nothing here" and "not here yet" should occupy the same space.
+//
+// The mark carries the whole message: no visible "Loading…" caption. Pass what
+// is loading as `label` and it becomes LogoLoading's aria-label, so a screen
+// reader still hears "Loading campaigns" where the caption used to say it.
+//
+// These are for blocks — a section, a table body, a dialog body, a route. For a
+// button or an inline spot next to text, keep the Lucide spinner; the mark is
+// illegible at that size.
+
+export function LoadingArea({
+  size = 40,
+  name,
+  panel = false,
+  label = "Loading",
+  className,
+}) {
+  return (
+    <div
+      className={cn(
+        "flex h-full items-center justify-center px-6 py-16",
+        panel && "rounded-xl border border-border bg-surface-subtle",
+        className,
+      )}
+    >
+      <LogoLoading name={name} size={size} aria-label={label} />
+    </div>
+  );
+}
+
+export function LoadingScreen({
+  size = 80,
+  name,
+  label = "Loading",
+  className,
+}) {
+  return (
+    <div
+      className={cn(
+        "flex min-h-screen w-full items-center justify-center px-6 py-16",
+        className,
+      )}
+    >
+      <LogoLoading name={name} size={size} aria-label={label} />
     </div>
   );
 }
