@@ -1,0 +1,22 @@
+"use client";
+
+// Decorative corner grip for resizable panels. Purely visual — the drag
+// behaviour belongs to whatever panel library the host screen uses.
+export function ResizeHandle() {
+  return (
+    <div className="absolute bottom-1 right-1 p-1">
+      <svg width="10" height="10" viewBox="0 0 10 10" className="opacity-50">
+        <path
+          d="M 6 10 L 10 6 L 10 10 Z"
+          fill="currentColor"
+          className="text-muted-foreground"
+        />
+        <path
+          d="M 2 10 L 10 2 L 10 4 L 4 10 Z"
+          fill="currentColor"
+          className="text-muted-foreground"
+        />
+      </svg>
+    </div>
+  );
+}
