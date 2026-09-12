@@ -20,6 +20,7 @@ export function SuiteHeader({
   megaMenu = true,
   themeToggle = true,
   signInHref = "/login",
+  signInLabel = "Sign In",
   dashboardHref = "/org",
   homeHref = "/",
   logoSrc = "/logo1.svg",
@@ -57,7 +58,7 @@ export function SuiteHeader({
               href={signInHref}
               className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
-              Sign In
+              {signInLabel}
             </a>
           )}
         </div>
