@@ -480,7 +480,16 @@ export function Toolbar({ children, className }) {
   return (
     <div
       className={cn(
-        "flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between",
+        // Mobile: filters and the collapsed search icon share one row. The
+        // first lane grows, shrinks below its content width, and scrolls
+        // instead of pushing the icon onto a lonely second row.
+        // sm+: unchanged (filters left, search right).
+        "flex flex-row flex-wrap items-center gap-x-2 gap-y-3 sm:flex-nowrap sm:justify-between sm:gap-3",
+        "max-sm:[&>*:first-child]:min-w-0 max-sm:[&>*:first-child]:grow max-sm:[&>*:first-child]:overflow-x-auto max-sm:[&>*:first-child>*]:shrink-0",
+        // Mobile: an open search mounts its <input/>, which drops the field
+        // onto its own stretched row below the filters. The open width is
+        // capped at 100% (see ExpandableSearch), so it fills the row evenly.
+        "max-sm:has-[input]:flex-col max-sm:has-[input]:items-stretch",
         className,
       )}
     >

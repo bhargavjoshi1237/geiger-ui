@@ -70,7 +70,10 @@ export function ExpandableSearch({
 
   return (
     <div
-      style={{ width: open ? expandedWidth : "2.25rem" }}
+      // Cap the open width at the flex item's own line so a Toolbar can drop
+      // the field onto a full-width row (via flex-wrap/basis) without the
+      // fixed rem width overflowing a narrow viewport.
+      style={{ width: open ? `min(100%, ${expandedWidth})` : "2.25rem" }}
       className={cn(
         // No fixed height: Input is !h-auto and sizes itself from the shared
         // --input-box-* tokens, so an h-9 here left the field overflowing a
