@@ -14,7 +14,6 @@ import {
   LayoutGrid,
   Megaphone,
   Menu,
-  MessageSquare,
   PenTool,
   Webhook,
   Zap,
@@ -40,7 +39,7 @@ import {
 // load is correct regardless, since each product is a separate deployment.
 export const SUITE_PRODUCTS = [
   { icon: Zap, label: "Notes", description: "Write and collaborate.", href: "/notes", badge: "Pre-alpha" },
-  { icon: ContainerIcon, label: "Flow", description: "Plan and track work.", href: "/flow" },
+  { icon: ContainerIcon, label: "Flow", description: "Plan and track work.", href: "/flow", badge: "Pre-alpha" },
   { icon: Layers, label: "Assets", description: "Manage your media.", href: "/assets" },
   { icon: Cpu, label: "Grey", description: "AI workspace tools.", href: "/grey" },
   { icon: FileText, label: "Forms", description: "Build forms and surveys.", href: "/forms" },
@@ -49,7 +48,8 @@ export const SUITE_PRODUCTS = [
   { icon: Megaphone, label: "Campaign", description: "Run marketing campaigns.", href: "/campaign" },
   { icon: Webhook, label: "Pods", description: "Edge functions for API calls.", href: "/pods" },
   { icon: Headset, label: "Comms", description: "Message and support customers.", href: "/comms" },
-  { icon: MessageSquare, label: "Chat", description: "Messaging and hangout.", href: "/chat", badge: "Pre-alpha" },
+  // Chat is no longer a standalone product — it ships inside Flow, as the
+  // Grounding tab of every project, so it has no entry of its own here.
   { icon: PenTool, label: "Canvas", description: "Visual colab workspace.", href: "/canvas" },
   { icon: FileSignature, label: "Docs", description: "Send and sign documents.", href: "/docs" },
   { icon: Building2, label: "Property", description: "Manage real estate.", href: "/property" },
