@@ -2,6 +2,8 @@ import * as React from "react"
 
 const MOBILE_BREAKPOINT = 768
 
+// True below the 768px breakpoint, tracked live through matchMedia. Reads false
+// on the server and the first client render, until the effect has measured.
 export function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState(undefined)
 
