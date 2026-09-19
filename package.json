@@ -20,6 +20,10 @@
   "scripts": {
     "lint": "eslint src"
   },
+  "dependencies": {
+    "react-hook-form": ">=7.50.0",
+    "vaul": ">=1.0.0"
+  },
   "peerDependencies": {
     "@radix-ui/react-slider": ">=1.2.0",
     "@radix-ui/react-switch": ">=1.1.0",
