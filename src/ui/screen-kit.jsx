@@ -200,6 +200,20 @@ function columnState(column, elapsed, duration) {
   };
 }
 
+// Wraps the animated wheels so only the real value reaches assistive tech and
+// the clipboard: each wheel carries all ten digits in the DOM, which otherwise
+// reads out as "0123456789" once per decimal place.
+function RolledValue({ value, className, children }) {
+  return (
+    <span className={cn("inline-flex tabular-nums", className)}>
+      <span className="sr-only">{value}</span>
+      <span aria-hidden="true" className="inline-flex select-none">
+        {children}
+      </span>
+    </span>
+  );
+}
+
 function RollingWheel({ offset, opacity, width }) {
   return (
     <span
@@ -266,10 +280,13 @@ export function RollingNumber({ value, className, duration = 1100 }) {
   // ("N/A", "—") is passed through untouched.
   if (!parsed) {
     const pending = value === null || value === undefined || value === "";
+    if (!pending) {
+      return <span className={cn("inline-flex tabular-nums", className)}>{value}</span>;
+    }
     return (
-      <span className={cn("inline-flex tabular-nums", className)}>
-        {pending ? <RollingWheel offset={0} opacity={1} width={1} /> : value}
-      </span>
+      <RolledValue value="0" className={className}>
+        <RollingWheel offset={0} opacity={1} width={1} />
+      </RolledValue>
     );
   }
 
@@ -277,9 +294,9 @@ export function RollingNumber({ value, className, duration = 1100 }) {
   // this frame so the final number never flashes in ahead of the roll.
   if (!plan) {
     return (
-      <span className={cn("inline-flex tabular-nums", className)}>
+      <RolledValue value={value} className={className}>
         <RollingWheel offset={0} opacity={1} width={1} />
-      </span>
+      </RolledValue>
     );
   }
 
@@ -321,7 +338,11 @@ export function RollingNumber({ value, className, duration = 1100 }) {
     nodes.push(<span key={`suf-${i}`}>{ch}</span>);
   });
 
-  return <span className={cn("inline-flex tabular-nums", className)}>{nodes}</span>;
+  return (
+    <RolledValue value={value} className={className}>
+      {nodes}
+    </RolledValue>
+  );
 }
 
 const STATS_BAR_COLS = {

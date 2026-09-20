@@ -81,7 +81,7 @@ export function Topbar({
           <img
             src={logoSrc}
             alt=""
-            className="w-5 h-5 -mr-0.5"
+            className="geiger-logo w-5 h-5 -mr-0.5"
             onError={handleLogoError}
           />
         </a>
@@ -94,7 +94,7 @@ export function Topbar({
         <img
           src={logoSrc}
           alt=""
-          className="h-5 w-5"
+          className="geiger-logo h-5 w-5"
           onError={(e) => {
             e.currentTarget.style.display = "none";
           }}

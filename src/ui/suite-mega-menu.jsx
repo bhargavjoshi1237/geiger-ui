@@ -184,7 +184,7 @@ export function SuiteMegaMenu({
           >
             <SheetHeader className="border-b border-border pb-4">
               <div className="flex items-center gap-2">
-                <img src={logoSrc} alt="" className="h-[18px] w-[18px]" />
+                <img src={logoSrc} alt="" className="geiger-logo h-[18px] w-[18px]" />
                 <SheetTitle className="mt-0.5">Geiger Studio</SheetTitle>
               </div>
               <SheetDescription className="text-foreground0">
