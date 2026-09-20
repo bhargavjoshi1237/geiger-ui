@@ -53,7 +53,7 @@ export function EditorSectionHeader({ title, description, action, className }) {
       )}
     >
       <div className="min-w-0">
-        <h2 className="text-lg font-semibold capitalize text-white">{title}</h2>
+        <h2 className="text-lg font-semibold capitalize text-foreground">{title}</h2>
         {description ? (
           <p className="mt-0.5 text-sm text-text-secondary">{description}</p>
         ) : null}
@@ -103,7 +103,7 @@ export function StatTile({ label, value, delta, trend, hint, icon: Icon }) {
         <div className="mt-2 flex flex-col items-start gap-1 sm:flex-row sm:items-end sm:gap-2">
           <RollingNumber
             value={value}
-            className="text-2xl font-bold leading-none text-white tabular-nums"
+            className="text-2xl font-bold leading-none text-foreground tabular-nums"
           />
           {delta ? (
             <span className={cn("text-xs font-medium sm:mb-0.5", trendClass)}>
@@ -364,7 +364,7 @@ export function StatsBar({ stats, columns = 4, className }) {
                 <div className="mt-1 flex flex-col items-start gap-1 sm:flex-row sm:items-end sm:gap-2">
                   <RollingNumber
                     value={stat.value}
-                    className="text-2xl font-bold leading-none text-white"
+                    className="text-2xl font-bold leading-none text-foreground"
                   />
                   {stat.delta ? (
                     <span
