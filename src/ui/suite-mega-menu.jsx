@@ -14,7 +14,6 @@ import {
   LayoutGrid,
   Megaphone,
   Menu,
-  PenTool,
   Webhook,
   Zap,
 } from "lucide-react";
@@ -48,9 +47,6 @@ export const SUITE_PRODUCTS = [
   { icon: Megaphone, label: "Campaign", description: "Run marketing campaigns.", href: "/campaign" },
   { icon: Webhook, label: "Pods", description: "Edge functions for API calls.", href: "/pods" },
   { icon: Headset, label: "Comms", description: "Message and support customers.", href: "/comms" },
-  // Chat is no longer a standalone product — it ships inside Flow, as the
-  // Grounding tab of every project, so it has no entry of its own here.
-  { icon: PenTool, label: "Canvas", description: "Visual colab workspace.", href: "/canvas" },
   { icon: FileSignature, label: "Docs", description: "Send and sign documents.", href: "/docs" },
   { icon: Building2, label: "Property", description: "Manage real estate.", href: "/property" },
 ];

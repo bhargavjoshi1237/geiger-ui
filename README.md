@@ -12,7 +12,7 @@ shadcn/ui primitives plus the suite's semantic design tokens — one design lang
 
 ## Overview
 
-`@geiger/ui` is the single source of UI truth for the Geiger suite. Every product — Events, Flow, Notes, Forms, Content, Campaign, Chat, Comms, Docs, Property — imports its primitives and tokens from here, so a button, a table, or a dialog looks and behaves identically wherever you meet it.
+`@geiger/ui` is the single source of UI truth for the Geiger suite. Every product — Events, Flow, Notes, Forms, Content, Campaign, Comms, Docs, Property — imports its primitives and tokens from here, so a button, a table, or a dialog looks and behaves identically wherever you meet it.
 
 The package is **source-shipped and GitHub-installed**: there is no build step. Consuming Next.js apps transpile the JSX directly, which keeps the library trivial to change and impossible to get out of sync with a stale build artefact.
 
