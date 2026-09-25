@@ -36,18 +36,25 @@ function AvatarImage({
 
 function AvatarFallback({
   className,
+  children,
   ...props
 }) {
   return (
     <AvatarPrimitive.Fallback
       data-slot="avatar-fallback"
       className={cn(
-        // Trim the line box to cap height so uppercase initials sit on the
-        // optical center instead of riding high over the reserved descender space.
-        "flex size-full items-center justify-center rounded-full bg-muted text-sm leading-none text-muted-foreground [text-box:trim-both_cap_alphabetic] group-data-[size=sm]/avatar:text-xs",
+        "flex size-full items-center justify-center rounded-full bg-muted text-sm text-muted-foreground group-data-[size=sm]/avatar:text-xs",
         className
       )}
-      {...props} />
+      {...props}>
+      {/* Trim the line box to cap height so uppercase initials sit on the
+          optical center instead of riding high over the descender space.
+          text-box-trim only applies to block containers, so it lives on this
+          (blockified) flex item rather than on the flex container above. */}
+      <span className="leading-none [text-box:trim-both_cap_alphabetic]">
+        {children}
+      </span>
+    </AvatarPrimitive.Fallback>
   );
 }
 
