@@ -25,14 +25,9 @@ export const LOGO_LOADING_VARIANTS = [
   { id: "dying-bulb", label: "Dying bulb", weight: 1 },
   { id: "fuse-relay", label: "Fuse relay", weight: 1 },
   { id: "arc-flicker", label: "Arc flicker", weight: 2 },
-  { id: "ghost-trace", label: "Ghost trace", weight: 1 },
   { id: "sequential-strobe", label: "Sequential strobe", weight: 2 },
-  { id: "baton-sweep", label: "Baton sweep", weight: 1 },
-  { id: "trace-ink", label: "Trace & ink", weight: 1 },
-  { id: "axis-slide", label: "Axis slide", weight: 1 },
   { id: "elastic-pop", label: "Elastic pop", weight: 1 },
   { id: "relay-pulse", label: "Relay pulse", weight: 2 },
-  { id: "signal-glitch", label: "Signal glitch", weight: 1 },
   { id: "static-crackle", label: "Static crackle", weight: 1 },
   { id: "warning-flash", label: "Warning flash", weight: 1 },
   { id: "short-circuit", label: "Short circuit", weight: 1 },
@@ -67,58 +62,11 @@ function pickWeightedVariant() {
 }
 
 function GeigerBars() {
-  // pathLength="100" normalizes each bar to 100 units regardless of its actual
-  // geometry, so stroke-dasharray/dashoffset:100 traces the whole outline in
-  // one smooth sweep instead of a dashed, broken line.
-  return BAR_D.map((d, i) => <path key={i} className="gl-bar" d={d} pathLength="100" />);
-}
-
-function BatonSweepMark({ size, height }) {
-  const uid = React.useId().replace(/[^a-zA-Z0-9]/g, "");
-  const gradId = `gl-band-${uid}`;
-  const maskId = `gl-mask-${uid}`;
-  return (
-    <svg viewBox={VIEW_BOX} width={size} height={height} stroke="none" aria-hidden="true">
-      <defs>
-        <linearGradient id={gradId} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#000000" />
-          <stop offset="0.5" stopColor="#ffffff" />
-          <stop offset="1" stopColor="#000000" />
-        </linearGradient>
-        <mask id={maskId} maskUnits="userSpaceOnUse" x="-400" y="-200" width="1300" height="800">
-          <rect x="0" y="-160" width="190" height="620" fill={`url(#${gradId})`} className="gl-sweep-rect" />
-        </mask>
-      </defs>
-      <g style={{ fill: "#4a4a4a" }}>
-        {BAR_D.map((d, i) => <path key={i} d={d} />)}
-      </g>
-      <g style={{ fill: "var(--gl-accent, #e7e7e7)" }} mask={`url(#${maskId})`}>
-        {BAR_D.map((d, i) => <path key={i} d={d} />)}
-      </g>
-    </svg>
-  );
-}
-
-function SignalGlitchMark({ size, height }) {
-  return (
-    <div className="gl-glitch-frame" style={{ width: size, height }}>
-      <svg viewBox={VIEW_BOX} width={size} height={height} className="gl-fringe" style={{ color: "#ff4d4d" }} fill="currentColor" stroke="none" aria-hidden="true">
-        {BAR_D.map((d, i) => <path key={i} d={d} />)}
-      </svg>
-      <svg viewBox={VIEW_BOX} width={size} height={height} className="gl-fringe gl-fringe-b" style={{ color: "var(--gl-accent, #e7e7e7)" }} fill="currentColor" stroke="none" aria-hidden="true">
-        {BAR_D.map((d, i) => <path key={i} d={d} />)}
-      </svg>
-      <svg viewBox={VIEW_BOX} width={size} height={height} className="gl-glitch-top" fill="currentColor" stroke="none" aria-hidden="true">
-        {BAR_D.map((d, i) => <path key={i} d={d} />)}
-      </svg>
-    </div>
-  );
+  return BAR_D.map((d, i) => <path key={i} className="gl-bar" d={d} />);
 }
 
 function LogoLoadingMark({ variant, size }) {
   const height = Math.round((size * 285) / 467);
-  if (variant === "baton-sweep") return <BatonSweepMark size={size} height={height} />;
-  if (variant === "signal-glitch") return <SignalGlitchMark size={size} height={height} />;
   if (variant === "burst") {
     return (
       <svg viewBox={VIEW_BOX} width={size} height={height} fill="currentColor" stroke="none" aria-hidden="true">
@@ -179,14 +127,9 @@ export const CountdownLoading = makeVariantComponent("countdown", "CountdownLoad
 export const DyingBulbLoading = makeVariantComponent("dying-bulb", "DyingBulbLoading");
 export const FuseRelayLoading = makeVariantComponent("fuse-relay", "FuseRelayLoading");
 export const ArcFlickerLoading = makeVariantComponent("arc-flicker", "ArcFlickerLoading");
-export const GhostTraceLoading = makeVariantComponent("ghost-trace", "GhostTraceLoading");
 export const SequentialStrobeLoading = makeVariantComponent("sequential-strobe", "SequentialStrobeLoading");
-export const BatonSweepLoading = makeVariantComponent("baton-sweep", "BatonSweepLoading");
-export const TraceInkLoading = makeVariantComponent("trace-ink", "TraceInkLoading");
-export const AxisSlideLoading = makeVariantComponent("axis-slide", "AxisSlideLoading");
 export const ElasticPopLoading = makeVariantComponent("elastic-pop", "ElasticPopLoading");
 export const RelayPulseLoading = makeVariantComponent("relay-pulse", "RelayPulseLoading");
-export const SignalGlitchLoading = makeVariantComponent("signal-glitch", "SignalGlitchLoading");
 export const StaticCrackleLoading = makeVariantComponent("static-crackle", "StaticCrackleLoading");
 export const WarningFlashLoading = makeVariantComponent("warning-flash", "WarningFlashLoading");
 export const ShortCircuitLoading = makeVariantComponent("short-circuit", "ShortCircuitLoading");
@@ -207,8 +150,8 @@ export function LogoLoading({ name, ...props }) {
   // Rolled in the initializer so the variant is settled before this mount's
   // first frame and never changes again. Swapping it mid-flight restarted the
   // animation as a different mark, which read as the loader starting over —
-  // and because variant decides DOM shape (baton-sweep and signal-glitch build
-  // their own subtrees), rolling while hydrating is a structural mismatch.
+  // and because variant decides DOM shape (burst wraps its bars in an extra
+  // group), rolling while hydrating is a structural mismatch.
   const [picked] = React.useState(() =>
     requested || !clientMounted ? null : pickWeightedVariant()
   );
