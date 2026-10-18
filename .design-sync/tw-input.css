@@ -1,4 +1,9 @@
 @import "tailwindcss";
-@source "../src/ui/**/*.jsx";
-@source "../src/lib/**/*.js";
+@source "../src/**/*.{js,jsx}";
 @import "../src/tokens.css";
+
+/* next/font defines these in the apps; designs get them from here (faces ship via cfg.extraFonts). */
+:root {
+  --font-geist-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-geist-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}

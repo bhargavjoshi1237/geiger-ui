@@ -132,7 +132,7 @@ export function ExpandableSearch({
           aria-label={label}
           aria-expanded={false}
           onClick={() => setOpen(true)}
-          className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-surface-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="flex size-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-surface-hover dark:hover:bg-surface-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <Search className="size-4" />
         </button>

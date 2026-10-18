@@ -2,19 +2,19 @@
 
 import {
   ArrowRight,
+  BrainCircuit,
   Building2,
   CalendarDays,
   ChevronDown,
   ContainerIcon,
-  Cpu,
   FileSignature,
   FileText,
-  Headset,
+  GalleryVerticalEnd,
   Layers,
-  LayoutGrid,
   Megaphone,
   Menu,
-  Webhook,
+  MessagesSquare,
+  Network,
   Zap,
 } from "lucide-react";
 import { Button } from "./button.jsx";
@@ -40,13 +40,13 @@ export const SUITE_PRODUCTS = [
   { icon: Zap, label: "Notes", description: "Write and collaborate.", href: "/notes", badge: "Pre-alpha" },
   { icon: ContainerIcon, label: "Flow", description: "Plan and track work.", href: "/flow", badge: "Pre-alpha" },
   { icon: Layers, label: "Assets", description: "Manage your media.", href: "/assets" },
-  { icon: Cpu, label: "Grey", description: "AI workspace tools.", href: "/grey" },
+  { icon: BrainCircuit, label: "Grey", description: "Managed RAG and knowledge graphs.", href: "/grey" },
   { icon: FileText, label: "Forms", description: "Build forms and surveys.", href: "/forms" },
   { icon: CalendarDays, label: "Events", description: "Organise & manage events.", href: "/events", badge: "Pre-alpha" },
-  { icon: LayoutGrid, label: "Content", description: "Your content operating system.", href: "/content" },
+  { icon: GalleryVerticalEnd, label: "Content", description: "Personalized feeds that learn taste.", href: "/content" },
   { icon: Megaphone, label: "Campaign", description: "Run marketing campaigns.", href: "/campaign" },
-  { icon: Webhook, label: "Pods", description: "Edge functions for API calls.", href: "/pods" },
-  { icon: Headset, label: "Comms", description: "Message and support customers.", href: "/comms" },
+  { icon: Network, label: "Pods", description: "API gateway for your services.", href: "/pods" },
+  { icon: MessagesSquare, label: "Comms", description: "Live chat and customer support.", href: "/comms" },
   { icon: FileSignature, label: "Docs", description: "Send and sign documents.", href: "/docs" },
   { icon: Building2, label: "Property", description: "Manage real estate.", href: "/property" },
 ];
@@ -102,7 +102,7 @@ export function SuiteMegaMenu({
 
           <div className="invisible absolute left-1/2 top-full w-[650px] -translate-x-1/2 translate-y-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
             <div className="rounded-xl border border-border bg-surface-subtle p-4 shadow-xl">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-foreground0">Products</p>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Products</p>
               <div className="grid grid-cols-3 gap-1">
                 {products.map((item) => {
                   const Icon = item.icon;
@@ -118,7 +118,7 @@ export function SuiteMegaMenu({
                           {item.label}
                           {item.badge ? <ProductBadge className="text-[9px]">{item.badge}</ProductBadge> : null}
                         </p>
-                        <p className="truncate text-xs text-foreground0">{item.description}</p>
+                        <p className="truncate text-xs text-muted-foreground">{item.description}</p>
                       </div>
                     </a>
                   );
@@ -140,7 +140,7 @@ export function SuiteMegaMenu({
 
           <div className="invisible absolute left-1/2 top-full w-[280px] -translate-x-1/2 translate-y-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
             <div className="rounded-xl border border-border bg-surface-subtle p-3 shadow-xl">
-              <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wide text-foreground0">Resources</p>
+              <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Resources</p>
               <div className="space-y-1">
                 {resources.map((item) => (
                   <a
@@ -149,7 +149,7 @@ export function SuiteMegaMenu({
                     className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:bg-surface-hover focus-visible:text-foreground focus-visible:outline-none"
                   >
                     {item.label}
-                    <ArrowRight className="h-3.5 w-3.5 text-foreground0" />
+                    <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
                   </a>
                 ))}
               </div>
@@ -183,14 +183,14 @@ export function SuiteMegaMenu({
                 <img src={logoSrc} alt="" className="geiger-logo h-[18px] w-[18px]" />
                 <SheetTitle className="mt-0.5">Geiger Studio</SheetTitle>
               </div>
-              <SheetDescription className="text-foreground0">
+              <SheetDescription className="text-muted-foreground">
                 Browse products, resources, and pricing.
               </SheetDescription>
             </SheetHeader>
 
             <div className="space-y-6 px-4 pb-6">
               <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-wide text-foreground0">Products</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Products</p>
                 <div className="flex flex-nowrap gap-2 overflow-x-auto pb-1">
                   {products.map((item) => {
                     const Icon = item.icon;
@@ -211,7 +211,7 @@ export function SuiteMegaMenu({
               </div>
 
               <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-wide text-foreground0">Resources</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Resources</p>
                 {resources.map((item) => (
                   <SheetClose asChild key={item.label}>
                     <a
@@ -219,7 +219,7 @@ export function SuiteMegaMenu({
                       className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-foreground"
                     >
                       {item.label}
-                      <ArrowRight className="h-4 w-4 text-foreground0" />
+                      <ArrowRight className="h-4 w-4 text-muted-foreground" />
                     </a>
                   </SheetClose>
                 ))}

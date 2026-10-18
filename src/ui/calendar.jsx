@@ -118,23 +118,23 @@ const MONTHS = [
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export const EVENT_COLORS = {
-  default:    { pill: "bg-zinc-500/[0.15] text-blue-300",    dot: "#3b82f6",  special: false },
-  standup:    { pill: "bg-indigo-500/[0.15] text-indigo-300", dot: "#6366f1",  special: false },
-  meeting:    { pill: "bg-cyan-500/[0.15] text-cyan-300",     dot: "#06b6d4",  special: false },
-  coffee:     { pill: "bg-violet-500/[0.15] text-violet-300", dot: "#8b5cf6",  special: false },
-  marketing:  { pill: "bg-rose-500/[0.15] text-rose-300",     dot: "#f43f5e",  special: false },
-  personal:   { pill: "bg-emerald-500/[0.12] text-emerald-400",dot: "#10b981", special: true  },
-  inspection: { pill: "bg-red-500/[0.12] text-red-400",       dot: "#ef4444",  special: true  },
+  default:    { pill: "bg-zinc-500/[0.15] text-blue-700 dark:text-blue-300",    dot: "#3b82f6",  special: false },
+  standup:    { pill: "bg-indigo-500/[0.15] text-indigo-700 dark:text-indigo-300", dot: "#6366f1",  special: false },
+  meeting:    { pill: "bg-cyan-500/[0.15] text-cyan-700 dark:text-cyan-300",     dot: "#06b6d4",  special: false },
+  coffee:     { pill: "bg-violet-500/[0.15] text-violet-700 dark:text-violet-300", dot: "#8b5cf6",  special: false },
+  marketing:  { pill: "bg-rose-500/[0.15] text-rose-700 dark:text-rose-300",     dot: "#f43f5e",  special: false },
+  personal:   { pill: "bg-emerald-500/[0.12] text-emerald-700 dark:text-emerald-400",dot: "#10b981", special: true  },
+  inspection: { pill: "bg-red-500/[0.12] text-red-700 dark:text-red-400",       dot: "#ef4444",  special: true  },
   work:       { pill: "bg-zinc-500/[0.2] text-foreground",       dot: "#71717a",  special: false },
-  lunch:      { pill: "bg-orange-500/[0.15] text-orange-300",  dot: "#f97316",  special: false },
-  planning:   { pill: "bg-zinc-500/[0.15] text-blue-300",      dot: "#3b82f6",  special: false },
-  design:     { pill: "bg-purple-500/[0.15] text-purple-300",  dot: "#a855f7",  special: false },
-  social:     { pill: "bg-violet-500/[0.12] text-violet-400",  dot: "#8b5cf6",  special: true  },
-  exercise:   { pill: "bg-emerald-500/[0.12] text-emerald-400",dot: "#10b981", special: true  },
-  task:       { pill: "bg-green-500/[0.15] text-green-300",    dot: "#22c55e",  special: false },
-  deadline:   { pill: "bg-red-500/[0.15] text-red-300",        dot: "#ef4444",  special: false },
-  milestone:  { pill: "bg-yellow-500/[0.15] text-yellow-300",  dot: "#eab308",  special: false },
-  reminder:   { pill: "bg-orange-500/[0.15] text-orange-300",  dot: "#f97316",  special: false },
+  lunch:      { pill: "bg-orange-500/[0.15] text-orange-700 dark:text-orange-300",  dot: "#f97316",  special: false },
+  planning:   { pill: "bg-zinc-500/[0.15] text-blue-700 dark:text-blue-300",      dot: "#3b82f6",  special: false },
+  design:     { pill: "bg-purple-500/[0.15] text-purple-700 dark:text-purple-300",  dot: "#a855f7",  special: false },
+  social:     { pill: "bg-violet-500/[0.12] text-violet-700 dark:text-violet-400",  dot: "#8b5cf6",  special: true  },
+  exercise:   { pill: "bg-emerald-500/[0.12] text-emerald-700 dark:text-emerald-400",dot: "#10b981", special: true  },
+  task:       { pill: "bg-green-500/[0.15] text-green-700 dark:text-green-300",    dot: "#22c55e",  special: false },
+  deadline:   { pill: "bg-red-500/[0.15] text-red-700 dark:text-red-300",        dot: "#ef4444",  special: false },
+  milestone:  { pill: "bg-yellow-500/[0.15] text-yellow-700 dark:text-yellow-300",  dot: "#eab308",  special: false },
+  reminder:   { pill: "bg-orange-500/[0.15] text-orange-700 dark:text-orange-300",  dot: "#f97316",  special: false },
 };
 
 const formatEventTime = (dateStr) => {
@@ -520,7 +520,7 @@ export function Calendar({
                     }}
                     className={cn(
                       "min-h-[92px] sm:min-h-[120px] p-1.5 sm:p-1.5 border-b border-r border-border cursor-pointer relative overflow-hidden",
-                      "transition-colors hover:bg-surface-card",
+                      "transition-colors hover:bg-surface-hover dark:hover:bg-surface-card",
                       activityViewMode === "heatmap" && ACTIVITY_COLORS[activityLevel],
                       !isCurrentMonth && "opacity-35",
                       index % 7 === 6 && "border-r-0",                       index >= 35 && "border-b-0",                         )}
@@ -537,7 +537,7 @@ export function Calendar({
                                 : isToday
                                 ? "bg-primary text-primary-foreground font-semibold"
                                 : isCurrentMonth
-                                ? "text-muted-foreground rounded-full hover:bg-surface-card"
+                                ? "text-muted-foreground rounded-full hover:bg-surface-hover dark:hover:bg-surface-card"
                                 : "text-text-tertiary"
                             )}
                           >
@@ -883,7 +883,7 @@ export function Calendar({
                   className={cn(
                     "text-lg font-medium mt-1 w-8 h-8 mx-auto flex items-center justify-center rounded-full",
                     isToday
-                      ? "bg-zinc-500 text-foreground"
+                      ? "bg-zinc-300 dark:bg-zinc-500 text-foreground"
                       : "text-foreground"
                   )}
                 >
@@ -1051,7 +1051,7 @@ export function Calendar({
             className={cn(
               "text-4xl font-bold mt-2 w-16 h-16 mx-auto flex items-center justify-center rounded-2xl",
               isSameDay(selectedDay, today)
-                ? "bg-zinc-500 text-foreground"
+                ? "bg-zinc-300 dark:bg-zinc-500 text-foreground"
                 : "text-foreground"
             )}
           >
@@ -1092,7 +1092,7 @@ export function Calendar({
                     <div
                       className={cn(
                         "text-sm font-semibold mt-0.5 w-7 h-7 flex items-center justify-center rounded-lg",
-                        isToday && "bg-zinc-500 text-foreground",
+                        isToday && "bg-zinc-300 dark:bg-zinc-500 text-foreground",
                         !isToday && !isSelected && "text-foreground",
                         isSelected && !isToday && "text-foreground"
                       )}
@@ -1371,7 +1371,7 @@ export function Timeline({
                   <div
                     className={cn(
                       "text-lg font-medium",
-                      isToday ? "text-blue-400" : "text-foreground"
+                      isToday ? "text-blue-600 dark:text-blue-400" : "text-foreground"
                     )}
                   >
                     {day.getDate()}
@@ -1506,7 +1506,7 @@ export function EventModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/30 dark:bg-black/60 backdrop-blur-sm"
         onClick={onClose}
       />
       <div className="relative bg-surface-subtle border border-border rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl">
@@ -1644,7 +1644,7 @@ export function EventModal({
               </Button>
               <Button
                 type="submit"
-                className="flex-1 bg-surface-strong hover:bg-surface-hover"
+                className="flex-1 bg-surface-strong text-foreground hover:bg-surface-hover"
               >
                 {mode === "create" ? "Create" : "Save"}
               </Button>

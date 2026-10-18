@@ -22,29 +22,29 @@ import {
 } from "lucide-react";
 
 const severityColors = {
-  critical: "bg-red-500/10 text-red-400 border-red-500/20",
-  high: "bg-orange-500/10 text-orange-400 border-orange-500/20",
-  medium: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
-  low: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  critical: "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20",
+  high: "bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-500/20",
+  medium: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 border-yellow-500/20",
+  low: "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20",
 };
 
 const severityIcons = {
-  critical: <AlertTriangle className="w-3 h-3 text-red-400" />,
-  high: <Expand className="w-3 h-3 text-orange-400" />,
-  medium: <Maximize2 className="w-3 h-3 text-yellow-400" />,
-  low: <ArrowUpRight className="w-3 h-3 text-blue-400" />,
+  critical: <AlertTriangle className="w-3 h-3 text-red-600 dark:text-red-400" />,
+  high: <Expand className="w-3 h-3 text-orange-600 dark:text-orange-400" />,
+  medium: <Maximize2 className="w-3 h-3 text-yellow-600 dark:text-yellow-400" />,
+  low: <ArrowUpRight className="w-3 h-3 text-blue-600 dark:text-blue-400" />,
 };
 
 const statusIcons = {
   open: (
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-400">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-600 dark:text-red-400">
       <circle cx="12" cy="12" r="10" />
       <path d="M12 8v4" />
       <path d="M12 16h.01" />
     </svg>
   ),
   in_progress: (
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 dark:text-blue-400">
       <path d="M12 2v4" />
       <path d="M12 18v4" />
       <path d="m4.93 4.93 2.83 2.83" />
@@ -56,7 +56,7 @@ const statusIcons = {
     </svg>
   ),
   resolved: (
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-400">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-600 dark:text-green-400">
       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
       <polyline points="22 4 12 14.01 9 11.01" />
     </svg>
@@ -140,7 +140,7 @@ function IssueItem({
                 {dueDate}
               </span>
             )}
-            <p className="text-zinc-600">|</p>
+            <p className="text-zinc-300 dark:text-zinc-600">|</p>
             <IssueSeverityBadge severity={severity} />
           </div>
         </div>

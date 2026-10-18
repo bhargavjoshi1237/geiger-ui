@@ -61,7 +61,7 @@ export function ActivityCalendar({
             <CardHeader className="pb-2">
               <CardDescription className="text-text-secondary text-xs">This Week</CardDescription>
               <CardTitle className="text-2xl text-foreground flex items-center gap-2">
-                <Activity className="w-5 h-5 text-blue-400" />
+                <Activity className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 {stats.weekTotal}
               </CardTitle>
             </CardHeader>
@@ -71,7 +71,7 @@ export function ActivityCalendar({
             <CardHeader className="pb-2">
               <CardDescription className="text-text-secondary text-xs">This Month</CardDescription>
               <CardTitle className="text-2xl text-foreground flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-green-400" />
+                <TrendingUp className="w-5 h-5 text-green-600 dark:text-green-400" />
                 {stats.monthTotal}
               </CardTitle>
             </CardHeader>
@@ -81,7 +81,7 @@ export function ActivityCalendar({
             <CardHeader className="pb-2">
               <CardDescription className="text-text-secondary text-xs">Daily Average</CardDescription>
               <CardTitle className="text-2xl text-foreground flex items-center gap-2">
-                <Zap className="w-5 h-5 text-yellow-400" />
+                <Zap className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
                 {stats.dailyAverage}
               </CardTitle>
             </CardHeader>
@@ -91,7 +91,7 @@ export function ActivityCalendar({
             <CardHeader className="pb-2">
               <CardDescription className="text-text-secondary text-xs">Most Active</CardDescription>
               <CardTitle className="text-2xl text-foreground flex items-center gap-2">
-                <CalendarIcon className="w-5 h-5 text-purple-400" />
+                <CalendarIcon className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                 {stats.mostActiveDay}
               </CardTitle>
             </CardHeader>

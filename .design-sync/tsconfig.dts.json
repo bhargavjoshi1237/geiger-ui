@@ -14,5 +14,5 @@
     "rootDir": "../src",
     "outDir": "../dist/types"
   },
-  "include": ["../src/index.js", "../src/ui/**/*.jsx", "../src/lib/**/*.js"]
+  "include": ["../src/index.js", "../src/ui/**/*.jsx", "../src/lib/**/*.js", "../src/nav/**/*.js", "../src/nav/**/*.jsx"]
 }

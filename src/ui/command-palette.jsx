@@ -419,7 +419,7 @@ export function CommandPalette({
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <DialogPortal>
-        <DialogOverlay className="bg-black/60 backdrop-blur-[2px]" />
+        <DialogOverlay className="bg-black/30 dark:bg-black/60 backdrop-blur-[2px]" />
         <DialogPrimitive.Content
           data-slot="command-palette"
           onOpenAutoFocus={(event) => {

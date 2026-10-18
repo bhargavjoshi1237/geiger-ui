@@ -38,18 +38,18 @@ export const FAQ = () => (
 export const Multiple = () => (
   <Accordion type="multiple" defaultValue={["a", "b"]} style={{ width: 420 }}>
     <AccordionItem value="a">
-      <AccordionTrigger>Shipping details</AccordionTrigger>
+      <AccordionTrigger>Workspace members</AccordionTrigger>
       <AccordionContent>
         <p style={{ margin: 0, color: "var(--muted-foreground)" }}>
-          Orders ship within 2 business days via tracked courier.
+          Invite teammates by email and assign Admin, Editor, or Viewer roles.
         </p>
       </AccordionContent>
     </AccordionItem>
     <AccordionItem value="b">
-      <AccordionTrigger>Returns policy</AccordionTrigger>
+      <AccordionTrigger>Data retention</AccordionTrigger>
       <AccordionContent>
         <p style={{ margin: 0, color: "var(--muted-foreground)" }}>
-          Return any unused item within 60 days for a full refund.
+          Deleted projects stay recoverable for 30 days before they are purged.
         </p>
       </AccordionContent>
     </AccordionItem>

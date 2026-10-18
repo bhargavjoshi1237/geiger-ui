@@ -20,10 +20,10 @@ export const BottomLegend = () => (
     <ResponsiveContainer width={520} height={260}>
       <LineChart data={data}>
         <CartesianGrid vertical={false} />
-        <XAxis dataKey="week" tickLine={false} axisLine={false} tickMargin={8} />
+        <XAxis padding={{ left: 16, right: 16 }} dataKey="week" tickLine={false} axisLine={false} tickMargin={8} />
         <Legend content={<ChartLegendContent />} />
-        <Line dataKey="active" stroke="var(--color-active)" strokeWidth={2} dot={false} />
-        <Line dataKey="churned" stroke="var(--color-churned)" strokeWidth={2} dot={false} />
+        <Line dataKey="active" stroke="var(--color-active)" strokeWidth={2} dot={false} isAnimationActive={false} />
+        <Line dataKey="churned" stroke="var(--color-churned)" strokeWidth={2} dot={false} isAnimationActive={false} />
       </LineChart>
     </ResponsiveContainer>
   </ChartContainer>

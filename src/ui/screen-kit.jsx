@@ -86,9 +86,9 @@ export function StatGrid({ stats, columns = 4, className }) {
 export function StatTile({ label, value, delta, trend, hint, icon: Icon }) {
   const trendClass =
     trend === "up"
-      ? "text-emerald-400"
+      ? "text-emerald-600 dark:text-emerald-400"
       : trend === "down"
-        ? "text-red-400"
+        ? "text-red-600 dark:text-red-400"
         : "text-text-secondary";
 
   return (
@@ -391,7 +391,7 @@ export function StatsBar({ stats, columns = 4, className }) {
                     <span
                       className={cn(
                         "inline-flex items-center gap-0.5 text-xs font-medium sm:mb-0.5",
-                        up ? "text-emerald-400" : "text-red-400",
+                        up ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400",
                       )}
                     >
                       <TrendIcon className="h-3 w-3" />

@@ -6,7 +6,6 @@ const data = [
   { quarter: "Q2", direct: 410, referral: 260 },
   { quarter: "Q3", direct: 385, referral: 240 },
   { quarter: "Q4", direct: 470, referral: 310 },
-  { quarter: "Q5", direct: 520, referral: 360 },
 ];
 
 const config = {
@@ -21,8 +20,8 @@ export const WithLegend = () => (
         <CartesianGrid vertical={false} />
         <XAxis dataKey="quarter" tickLine={false} axisLine={false} tickMargin={8} />
         <Legend content={<ChartLegendContent />} />
-        <Bar dataKey="direct" fill="var(--color-direct)" radius={4} />
-        <Bar dataKey="referral" fill="var(--color-referral)" radius={4} />
+        <Bar dataKey="direct" fill="var(--color-direct)" radius={4} isAnimationActive={false} />
+        <Bar dataKey="referral" fill="var(--color-referral)" radius={4} isAnimationActive={false} />
       </BarChart>
     </ResponsiveContainer>
   </ChartContainer>

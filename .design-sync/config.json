@@ -1,59 +1,404 @@
 {
   "pkg": "@geiger/ui",
   "globalName": "GeigerUi",
-  "projectId": "11ead9c7-ea72-4053-b753-037493d20323",
+  "projectId": "c21b0e79-2b86-4499-a425-20fed327dd33",
   "shape": "package",
   "cssEntry": ".design-sync/tailwind-compiled.css",
   "readmeHeader": ".design-sync/conventions.md",
+  "extraFonts": [
+    ".design-sync/fonts/geist.css"
+  ],
   "overrides": {
-    "Dialog": { "cardMode": "single", "viewport": "560x440" },
-    "DialogTrigger": { "cardMode": "single", "viewport": "560x440" },
-    "DialogContent": { "cardMode": "single", "viewport": "560x440" },
-    "DialogHeader": { "cardMode": "single", "viewport": "560x440" },
-    "DialogFooter": { "cardMode": "single", "viewport": "560x440" },
-    "DialogTitle": { "cardMode": "single", "viewport": "560x440" },
-    "DialogDescription": { "cardMode": "single", "viewport": "560x440" },
-    "DialogClose": { "cardMode": "single", "viewport": "560x440" },
-    "DialogOverlay": { "cardMode": "single", "viewport": "560x440" },
-    "DialogPortal": { "cardMode": "single", "viewport": "560x440" },
-    "EventModal": { "cardMode": "single", "viewport": "620x480" },
-    "Sheet": { "cardMode": "single", "viewport": "760x520" },
-    "SheetTrigger": { "cardMode": "single", "viewport": "760x520" },
-    "SheetContent": { "cardMode": "single", "viewport": "760x520" },
-    "SheetHeader": { "cardMode": "single", "viewport": "760x520" },
-    "SheetFooter": { "cardMode": "single", "viewport": "760x520" },
-    "SheetTitle": { "cardMode": "single", "viewport": "760x520" },
-    "SheetDescription": { "cardMode": "single", "viewport": "760x520" },
-    "SheetClose": { "cardMode": "single", "viewport": "760x520" },
-    "DropdownMenu": { "cardMode": "single", "viewport": "440x460" },
-    "DropdownMenuTrigger": { "cardMode": "single", "viewport": "440x460" },
-    "DropdownMenuContent": { "cardMode": "single", "viewport": "440x460" },
-    "DropdownMenuItem": { "cardMode": "single", "viewport": "440x460" },
-    "DropdownMenuCheckboxItem": { "cardMode": "single", "viewport": "440x460" },
-    "DropdownMenuRadioGroup": { "cardMode": "single", "viewport": "440x460" },
-    "DropdownMenuRadioItem": { "cardMode": "single", "viewport": "440x460" },
-    "DropdownMenuLabel": { "cardMode": "single", "viewport": "440x460" },
-    "DropdownMenuSeparator": { "cardMode": "single", "viewport": "440x460" },
-    "DropdownMenuShortcut": { "cardMode": "single", "viewport": "440x460" },
-    "DropdownMenuGroup": { "cardMode": "single", "viewport": "440x460" },
-    "DropdownMenuSub": { "cardMode": "single", "viewport": "440x460" },
-    "DropdownMenuSubContent": { "cardMode": "single", "viewport": "440x460" },
-    "DropdownMenuSubTrigger": { "cardMode": "single", "viewport": "440x460" },
-    "DropdownMenuPortal": { "cardMode": "single", "viewport": "440x460" },
-    "ContextMenu": { "cardMode": "single", "viewport": "440x460" },
-    "ContextMenuTrigger": { "cardMode": "single", "viewport": "440x460" },
-    "ContextMenuContent": { "cardMode": "single", "viewport": "440x460" },
-    "ContextMenuItem": { "cardMode": "single", "viewport": "440x460" },
-    "ContextMenuCheckboxItem": { "cardMode": "single", "viewport": "440x460" },
-    "ContextMenuRadioGroup": { "cardMode": "single", "viewport": "440x460" },
-    "ContextMenuRadioItem": { "cardMode": "single", "viewport": "440x460" },
-    "ContextMenuLabel": { "cardMode": "single", "viewport": "440x460" },
-    "ContextMenuSeparator": { "cardMode": "single", "viewport": "440x460" },
-    "ContextMenuShortcut": { "cardMode": "single", "viewport": "440x460" },
-    "ContextMenuGroup": { "cardMode": "single", "viewport": "440x460" },
-    "ContextMenuSub": { "cardMode": "single", "viewport": "440x460" },
-    "ContextMenuSubContent": { "cardMode": "single", "viewport": "440x460" },
-    "ContextMenuSubTrigger": { "cardMode": "single", "viewport": "440x460" },
-    "ContextMenuPortal": { "cardMode": "single", "viewport": "440x460" }
+    "Dialog": {
+      "cardMode": "single",
+      "viewport": "560x440"
+    },
+    "DialogTrigger": {
+      "cardMode": "single",
+      "viewport": "560x440"
+    },
+    "DialogContent": {
+      "cardMode": "single",
+      "viewport": "560x440"
+    },
+    "DialogHeader": {
+      "cardMode": "single",
+      "viewport": "560x440"
+    },
+    "DialogFooter": {
+      "cardMode": "single",
+      "viewport": "560x440"
+    },
+    "DialogTitle": {
+      "cardMode": "single",
+      "viewport": "560x440"
+    },
+    "DialogDescription": {
+      "cardMode": "single",
+      "viewport": "560x440"
+    },
+    "DialogClose": {
+      "cardMode": "single",
+      "viewport": "560x440"
+    },
+    "DialogOverlay": {
+      "cardMode": "single",
+      "viewport": "560x440"
+    },
+    "DialogPortal": {
+      "cardMode": "single",
+      "viewport": "560x440"
+    },
+    "EventModal": {
+      "cardMode": "single",
+      "viewport": "620x480"
+    },
+    "Sheet": {
+      "cardMode": "single",
+      "viewport": "760x520"
+    },
+    "SheetTrigger": {
+      "cardMode": "single",
+      "viewport": "760x520"
+    },
+    "SheetContent": {
+      "cardMode": "single",
+      "viewport": "760x520"
+    },
+    "SheetHeader": {
+      "cardMode": "single",
+      "viewport": "760x520"
+    },
+    "SheetFooter": {
+      "cardMode": "single",
+      "viewport": "760x520"
+    },
+    "SheetTitle": {
+      "cardMode": "single",
+      "viewport": "760x520"
+    },
+    "SheetDescription": {
+      "cardMode": "single",
+      "viewport": "760x520"
+    },
+    "SheetClose": {
+      "cardMode": "single",
+      "viewport": "760x520"
+    },
+    "DropdownMenu": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "DropdownMenuTrigger": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "DropdownMenuContent": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "DropdownMenuItem": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "DropdownMenuCheckboxItem": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "DropdownMenuRadioGroup": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "DropdownMenuRadioItem": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "DropdownMenuLabel": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "DropdownMenuSeparator": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "DropdownMenuShortcut": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "DropdownMenuGroup": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "DropdownMenuSub": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "DropdownMenuSubContent": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "DropdownMenuSubTrigger": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "DropdownMenuPortal": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "ContextMenu": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "ContextMenuTrigger": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "ContextMenuContent": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "ContextMenuItem": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "ContextMenuCheckboxItem": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "ContextMenuRadioGroup": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "ContextMenuRadioItem": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "ContextMenuLabel": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "ContextMenuSeparator": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "ContextMenuShortcut": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "ContextMenuGroup": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "ContextMenuSub": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "ContextMenuSubContent": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "ContextMenuSubTrigger": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "ContextMenuPortal": {
+      "cardMode": "single",
+      "viewport": "440x460"
+    },
+    "Accordion": {
+      "cardMode": "column"
+    },
+    "Button": {
+      "cardMode": "column"
+    },
+    "Card": {
+      "cardMode": "column"
+    },
+    "CardAction": {
+      "cardMode": "column"
+    },
+    "CardContent": {
+      "cardMode": "column"
+    },
+    "CardDescription": {
+      "cardMode": "column"
+    },
+    "CardFooter": {
+      "cardMode": "column"
+    },
+    "CardHeader": {
+      "cardMode": "column"
+    },
+    "CardTitle": {
+      "cardMode": "column"
+    },
+    "ChartTooltipContent": {
+      "cardMode": "column"
+    },
+    "Select": {
+      "cardMode": "single",
+      "viewport": "440x380"
+    },
+    "Popover": {
+      "cardMode": "single",
+      "viewport": "460x360"
+    },
+    "HoverCard": {
+      "cardMode": "single",
+      "viewport": "460x340"
+    },
+    "Tooltip": {
+      "cardMode": "single",
+      "viewport": "420x220"
+    },
+    "ActionMenu": {
+      "cardMode": "single",
+      "viewport": "440x420"
+    },
+    "CommandPalette": {
+      "cardMode": "single",
+      "viewport": "760x520"
+    },
+    "DatePicker": {
+      "cardMode": "single",
+      "viewport": "460x480"
+    },
+    "IconPicker": {
+      "cardMode": "single",
+      "viewport": "500x500"
+    },
+    "Toaster": {
+      "cardMode": "single",
+      "viewport": "560x320"
+    },
+    "SuiteMegaMenu": {
+      "cardMode": "single",
+      "viewport": "1100x640"
+    },
+    "Drawer": {
+      "cardMode": "single",
+      "viewport": "760x520"
+    },
+    "DrawerHeader": {
+      "cardMode": "single",
+      "viewport": "760x520"
+    },
+    "DrawerFooter": {
+      "cardMode": "single",
+      "viewport": "760x520"
+    },
+    "DrawerContent": {
+      "cardMode": "single",
+      "viewport": "760x520"
+    },
+    "Sidebar": {
+      "cardMode": "single",
+      "viewport": "960x600"
+    },
+    "SidebarFooter": {
+      "cardMode": "single",
+      "viewport": "960x600"
+    },
+    "SidebarGroup": {
+      "cardMode": "single",
+      "viewport": "960x600"
+    },
+    "SidebarGroupLabel": {
+      "cardMode": "single",
+      "viewport": "960x600"
+    },
+    "SidebarHeader": {
+      "cardMode": "single",
+      "viewport": "960x600"
+    },
+    "SidebarInput": {
+      "cardMode": "single",
+      "viewport": "960x600"
+    },
+    "SidebarMenuItem": {
+      "cardMode": "single",
+      "viewport": "960x600"
+    },
+    "SidebarMenuSkeleton": {
+      "cardMode": "single",
+      "viewport": "960x600"
+    },
+    "SidebarMenuSub": {
+      "cardMode": "single",
+      "viewport": "960x600"
+    },
+    "SidebarMenuSubButton": {
+      "cardMode": "single",
+      "viewport": "960x600"
+    },
+    "SidebarMenuSubItem": {
+      "cardMode": "single",
+      "viewport": "960x600"
+    },
+    "Topbar": {
+      "cardMode": "column"
+    },
+    "SuiteHeader": {
+      "cardMode": "column"
+    },
+    "Footer": {
+      "cardMode": "column"
+    },
+    "GlobalBanner": {
+      "cardMode": "column"
+    },
+    "Table": {
+      "cardMode": "column"
+    },
+    "TableCaption": {
+      "cardMode": "column"
+    },
+    "TableCell": {
+      "cardMode": "column"
+    },
+    "TableHead": {
+      "cardMode": "column"
+    },
+    "DataTable": {
+      "cardMode": "column"
+    },
+    "StatsBar": {
+      "cardMode": "column"
+    },
+    "StatGrid": {
+      "cardMode": "column"
+    },
+    "ScreenHeader": {
+      "cardMode": "column"
+    },
+    "Toolbar": {
+      "cardMode": "column"
+    },
+    "SectionCard": {
+      "cardMode": "column"
+    },
+    "SettingsList": {
+      "cardMode": "column"
+    },
+    "SettingRow": {
+      "cardMode": "column"
+    },
+    "ActivityCalendar": {
+      "cardMode": "column",
+      "viewport": "900x1260"
+    },
+    "Timeline": {
+      "cardMode": "column",
+      "viewport": "900x780"
+    },
+    "NavVisibilitySettings": {
+      "cardMode": "column"
+    },
+    "LoadingScreen": {
+      "cardMode": "column"
+    },
+    "IssueItem": {
+      "cardMode": "column"
+    }
   }
 }

@@ -38,8 +38,8 @@ export function SegmentedTabs({
               "inline-flex h-8 min-w-max flex-1 items-center justify-center gap-1.5 rounded-md px-3 text-sm font-medium transition-all",
               fullWidth ? "flex-1" : "sm:flex-none",
               isActive
-                ? "bg-surface-hover text-foreground shadow-sm"
-                : "text-text-secondary hover:bg-surface-card hover:text-foreground",
+                ? "bg-background dark:bg-surface-hover text-foreground shadow-sm"
+                : "text-text-secondary hover:bg-surface-hover dark:hover:bg-surface-card hover:text-foreground",
               buttonClassName,
             )}
           >

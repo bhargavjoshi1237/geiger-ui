@@ -29,15 +29,16 @@ Two extra utilities the suite defines: `scrollbar-subtle` (thin themed scrollbar
 ### ⚠ The utility set is precompiled — check before you use one
 
 This library ships a **prebuilt stylesheet** (`styles.css` → `_ds_bundle.css`), not a Tailwind
-build. It contains only the ~580 utilities the components themselves use. A class outside that
+build. It contains only the ~1,000 utilities the components themselves use. A class outside that
 set produces **no CSS at all** and fails silently.
 
-Confirmed present: `flex` `grid` `items-center` `justify-between` `w-full` `truncate`
-`text-center` `shadow-sm` `size-4` `grid-cols-2` `max-w-md` `space-y-4` `mt-4`, `gap-0/1/2/3/4/6/8`,
-`p-0/1/2/3/4/6`, `text-xs/sm/base/lg/xl/2xl/4xl`.
+Confirmed present: `flex` `grid` `items-center` `justify-between` `w-full` `h-full` `min-h-screen`
+`truncate` `text-center` `shadow-sm` `size-4` `grid-cols-2` `max-w-md` `max-w-2xl` `space-y-4`
+`mt-4`, `gap-0/1/2/3/4/5/6/8`, `p-0/1/2/3/4/6/8`, `px-6`, `py-8`, `text-xs/sm/base/lg/xl/2xl/3xl/4xl`.
 
-Absent (an example of the trap): `min-h-screen`, and **all arbitrary values** — `w-[520px]`,
-`h-[260px]`, `gap-5`, `p-8` do nothing.
+Absent (examples of the trap): `grid-cols-4`, `text-5xl`, raw palette backgrounds like
+`bg-emerald-400` / `bg-sky-400`, and **any arbitrary value the components don't use themselves** —
+`w-[520px]`, `h-[260px]` do nothing.
 
 **So: for any sizing or layout value not listed above, use an inline `style={{…}}`.** Use the
 token utilities for color and the inline style for geometry. If unsure whether a class exists,
@@ -49,15 +50,39 @@ Tokens live on `:root`, so components are styled **with no provider** — light 
 default. For dark, put `className="dark"` on an ancestor (the `.dark` class carries the whole
 token set; the suite's dark canvas is `#161616`).
 
-Three components do need a wrapper, and only these:
+These components need a wrapper:
 
 - `Sidebar` and every `Sidebar*` part → wrap in `SidebarProvider`; put page content in `SidebarInset`.
+- `Topbar` → also inside `SidebarProvider` (its default sidebar trigger throws without one), or pass
+  a `sidebarTrigger` element. Pass `logoSrc` — the default `/logo1.svg` is not shipped.
 - `Tooltip` → wrap in `TooltipProvider`.
-- `toast()` calls → render `<Toaster />` once at the app root.
+- `GlobalBanner` → wrap in `BannerProvider`; use `position="static"` inside a layout.
 
-`ThemeToggle` flips light/dark. `Topbar`, `CommandPalette`, `Logo`, `SearchBar`, `IssueItem`,
-`Timeline`, `ActivityCalendar` and `EventModal` are suite-level composites — prefer them over
-rebuilding those shapes.
+`ThemeToggle` renders but cannot switch theme in a design (no theme provider is exported) — to show
+dark mode, put `className="dark"` on an ancestor instead.
+
+`Toaster` is exported but `toast()` is **not** — a design cannot fire a toast. Show feedback
+inline instead (a `Badge`, a `Card` message, or `GlobalBanner`).
+
+The font is **Geist** (and Geist Mono), shipped with the bundle — never set a `font-family`.
+
+`Badge` variants are `default` `neutral` `success` `info` `warning` `danger` `purple` `outline`
+(no `secondary`/`destructive` — unknown variants silently render neutral). `Button` variants are
+`default` `secondary` `outline` `ghost` `link` `destructive`.
+
+### Build screens from the screen kit
+
+Workspace screens follow one frame: `ScreenHeader` (title, description, actions) → `StatsBar`
+(KPI strip; `StatGrid`/`StatTile` for separate tiles) → `Toolbar` with `SearchInput` → `DataTable`
+(`columns: [{ key, header, align, render }]`, `data`, `getRowKey`) with `StatusPill` cells → `EmptyState`
+when there are no rows. Group settings in `SectionCard` + `SettingsList`/`SettingRow`; wrap form
+controls in `Field`. Loading: `LoadingArea` (section) / `LoadingScreen` (page), or `LogoLoading`.
+`StatusPill` takes `status` plus a `map` keyed by status (`{ live: { label: "Live", variant:
+"success" } }`); omit `dotClass` — the dot inherits the pill colour.
+
+Other suite composites — prefer them over rebuilding the shape: `Topbar`, `SuiteHeader`,
+`CommandPalette`, `ActionMenu`, `Logo`, `SearchBar`, `IssueItem`, `Timeline`, `ActivityCalendar`,
+`EventModal`.
 
 ### Where the truth is
 

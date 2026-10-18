@@ -20,10 +20,10 @@ export const WithTooltip = () => (
     <ResponsiveContainer width={520} height={260}>
       <LineChart data={data}>
         <CartesianGrid vertical={false} />
-        <XAxis dataKey="day" tickLine={false} axisLine={false} tickMargin={8} />
+        <XAxis padding={{ left: 16, right: 16 }} dataKey="day" tickLine={false} axisLine={false} tickMargin={8} />
         <Tooltip defaultIndex={3} content={<ChartTooltipContent />} />
-        <Line dataKey="visitors" stroke="var(--color-visitors)" strokeWidth={2} dot={false} />
-        <Line dataKey="signups" stroke="var(--color-signups)" strokeWidth={2} dot={false} />
+        <Line dataKey="visitors" stroke="var(--color-visitors)" strokeWidth={2} dot={false} isAnimationActive={false} />
+        <Line dataKey="signups" stroke="var(--color-signups)" strokeWidth={2} dot={false} isAnimationActive={false} />
       </LineChart>
     </ResponsiveContainer>
   </ChartContainer>

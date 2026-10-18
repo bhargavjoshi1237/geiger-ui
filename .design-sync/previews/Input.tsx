@@ -14,7 +14,7 @@ export const WithPlaceholder = () => (
 
 export const Disabled = () => (
   <div style={{ width: 280 }}>
-    <Input defaultValue="Cannot edit this" disabled />
+    <Input defaultValue="geiger-studio.geiger.app" disabled />
   </div>
 );
 

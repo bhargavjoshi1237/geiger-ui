@@ -20,6 +20,17 @@
   align-items: center;
   justify-content: center;
   line-height: 0;
+  /* Theme colours behind the `accent` prop (--gl-accent): glow, sweep highlight, dim base. */
+  --gl-glow: var(--gl-accent, color-mix(in srgb, currentColor 35%, transparent));
+  --gl-arc-glow: color-mix(in srgb, currentColor 35%, transparent);
+  --gl-ink: var(--gl-accent, currentColor);
+  --gl-dim: color-mix(in srgb, currentColor 18%, transparent);
+}
+.dark .geiger-loading {
+  --gl-glow: var(--gl-accent, #e7e7e7);
+  --gl-arc-glow: rgb(255 255 255 / 0.7);
+  --gl-ink: var(--gl-accent, #e7e7e7);
+  --gl-dim: #4a4a4a;
 }
 
 .geiger-loading svg {
@@ -27,7 +38,7 @@
 }
 
 .geiger-loading[data-variant="neon-start"] .gl-bar {
-  filter: drop-shadow(0 0 14px var(--gl-accent, #e7e7e7));
+  filter: drop-shadow(0 0 14px var(--gl-glow));
   animation: gl-neon calc(3.2s / var(--gl-speed, 1)) steps(1, end) infinite;
 }
 .geiger-loading[data-variant="neon-start"] .gl-bar:nth-child(2) {
@@ -38,12 +49,12 @@
 }
 
 .geiger-loading[data-variant="burst"] .gl-mark {
-  filter: drop-shadow(0 0 16px var(--gl-accent, #e7e7e7));
+  filter: drop-shadow(0 0 16px var(--gl-glow));
   animation: gl-burst calc(1.6s / var(--gl-speed, 1)) steps(1, end) infinite;
 }
 
 .geiger-loading[data-variant="countdown"] .gl-bar {
-  filter: drop-shadow(0 0 14px var(--gl-accent, #e7e7e7));
+  filter: drop-shadow(0 0 14px var(--gl-glow));
 }
 .geiger-loading[data-variant="countdown"] .gl-bar:nth-child(1) {
   animation: gl-lad1 calc(2.4s / var(--gl-speed, 1)) steps(1, end) infinite;
@@ -56,7 +67,7 @@
 }
 
 .geiger-loading[data-variant="dying-bulb"] .gl-bar {
-  filter: drop-shadow(0 0 12px var(--gl-accent, #e7e7e7));
+  filter: drop-shadow(0 0 12px var(--gl-glow));
   animation: gl-bulb calc(3.6s / var(--gl-speed, 1)) steps(1, end) infinite;
 }
 .geiger-loading[data-variant="dying-bulb"] .gl-bar:nth-child(2) {
@@ -67,7 +78,7 @@
 }
 
 .geiger-loading[data-variant="fuse-relay"] .gl-bar {
-  filter: drop-shadow(0 0 14px var(--gl-accent, #e7e7e7));
+  filter: drop-shadow(0 0 14px var(--gl-glow));
   animation: gl-fuse calc(1.8s / var(--gl-speed, 1)) steps(1, end) infinite;
 }
 .geiger-loading[data-variant="fuse-relay"] .gl-bar:nth-child(2) {
@@ -78,7 +89,7 @@
 }
 
 .geiger-loading[data-variant="arc-flicker"] .gl-bar {
-  filter: drop-shadow(0 0 12px rgb(255 255 255 / 0.7));
+  filter: drop-shadow(0 0 12px var(--gl-arc-glow));
   animation: gl-arc calc(2.6s / var(--gl-speed, 1)) steps(1, end) infinite;
 }
 .geiger-loading[data-variant="arc-flicker"] .gl-bar:nth-child(2) {
@@ -89,7 +100,7 @@
 }
 
 .geiger-loading[data-variant="sequential-strobe"] .gl-bar {
-  filter: drop-shadow(0 0 14px var(--gl-accent, #e7e7e7));
+  filter: drop-shadow(0 0 14px var(--gl-glow));
   animation: gl-strobe calc(1.5s / var(--gl-speed, 1)) steps(1, end) infinite;
 }
 .geiger-loading[data-variant="sequential-strobe"] .gl-bar:nth-child(2) {
@@ -100,7 +111,7 @@
 }
 
 .geiger-loading[data-variant="static-crackle"] .gl-bar {
-  filter: drop-shadow(0 0 13px var(--gl-accent, #e7e7e7));
+  filter: drop-shadow(0 0 13px var(--gl-glow));
   animation: gl-crackle calc(2.2s / var(--gl-speed, 1)) steps(1, end) infinite;
 }
 .geiger-loading[data-variant="static-crackle"] .gl-bar:nth-child(2) {
@@ -111,7 +122,7 @@
 }
 
 .geiger-loading[data-variant="warning-flash"] .gl-bar {
-  filter: drop-shadow(0 0 15px var(--gl-accent, #e7e7e7));
+  filter: drop-shadow(0 0 15px var(--gl-glow));
   animation: gl-warn calc(2.4s / var(--gl-speed, 1)) steps(1, end) infinite;
 }
 .geiger-loading[data-variant="warning-flash"] .gl-bar:nth-child(2) {
@@ -122,7 +133,7 @@
 }
 
 .geiger-loading[data-variant="short-circuit"] .gl-bar {
-  filter: drop-shadow(0 0 14px var(--gl-accent, #e7e7e7));
+  filter: drop-shadow(0 0 14px var(--gl-glow));
   animation: gl-short calc(2s / var(--gl-speed, 1)) steps(1, end) infinite;
 }
 .geiger-loading[data-variant="short-circuit"] .gl-bar:nth-child(2) {
@@ -133,7 +144,7 @@
 }
 
 .geiger-loading[data-variant="heartbeat-pulse"] .gl-bar {
-  filter: drop-shadow(0 0 12px var(--gl-accent, #e7e7e7));
+  filter: drop-shadow(0 0 12px var(--gl-glow));
   animation: gl-heartbeat calc(1.8s / var(--gl-speed, 1)) ease-in-out infinite;
 }
 .geiger-loading[data-variant="heartbeat-pulse"] .gl-bar:nth-child(2) {
@@ -144,7 +155,7 @@
 }
 
 .geiger-loading[data-variant="counter-ticks"] .gl-bar {
-  filter: drop-shadow(0 0 13px var(--gl-accent, #e7e7e7));
+  filter: drop-shadow(0 0 13px var(--gl-glow));
 }
 .geiger-loading[data-variant="counter-ticks"] .gl-bar:nth-child(1) {
   animation: gl-tick-a calc(1.7s / var(--gl-speed, 1)) steps(1, end) infinite;

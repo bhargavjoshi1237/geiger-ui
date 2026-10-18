@@ -3,14 +3,14 @@ import { Separator } from "@geiger/ui";
 export const Horizontal = () => (
   <div style={{ width: 280 }}>
     <p style={{ fontSize: 14, color: "var(--foreground)", margin: 0 }}>
-      Radix Primitives
+      Geiger Flow
     </p>
     <p style={{ fontSize: 13, color: "var(--muted-foreground)", margin: "2px 0 0" }}>
-      An open-source UI component library.
+      Issues, sprints, and roadmaps for your team.
     </p>
     <Separator style={{ margin: "12px 0" }} />
     <p style={{ fontSize: 13, color: "var(--muted-foreground)", margin: 0 }}>
-      Accessible and unstyled by default.
+      12 open issues · 3 due this week
     </p>
   </div>
 );
@@ -26,10 +26,10 @@ export const Vertical = () => (
       color: "var(--foreground)",
     }}
   >
-    <span>Docs</span>
+    <span>Projects</span>
     <Separator orientation="vertical" />
-    <span>Components</span>
+    <span>Issues</span>
     <Separator orientation="vertical" />
-    <span>Themes</span>
+    <span>Settings</span>
   </div>
 );

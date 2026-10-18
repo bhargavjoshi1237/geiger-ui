@@ -2,8 +2,13 @@ import { ScrollArea } from "@geiger/ui";
 
 // ScrollBar is rendered internally by ScrollArea — the visible track/thumb below
 // is that component. A tall list keeps the vertical scrollbar prominent.
-const rows = Array.from({ length: 20 }, (_, i) => ({
-  name: `Member ${i + 1}`,
+const NAMES = [
+  "Priya Nair", "Marcus Chen", "Sofia Alvarez", "Kenji Park", "Amara Okafor",
+  "Liam O'Connell", "Hana Suzuki", "Diego Ramos", "Elena Petrova", "Noah Fischer",
+  "Zara Ahmed", "Lucas Martin", "Ines Duarte", "Omar Haddad", "Freya Lindqvist",
+];
+const rows = NAMES.map((name, i) => ({
+  name,
   role: i % 3 === 0 ? "Admin" : i % 3 === 1 ? "Editor" : "Viewer",
 }));
 

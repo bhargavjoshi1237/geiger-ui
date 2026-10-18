@@ -17,7 +17,7 @@ export const EditProfile = () => (
     <DialogTrigger asChild>
       <Button variant="outline">Edit profile</Button>
     </DialogTrigger>
-    <DialogContent>
+    <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
       <DialogHeader>
         <DialogTitle>Edit profile</DialogTitle>
         <DialogDescription>
@@ -31,7 +31,7 @@ export const EditProfile = () => (
         </div>
         <div style={{ display: "grid", gap: 6 }}>
           <Label htmlFor="d-email">Email</Label>
-          <Input id="d-email" type="email" defaultValue="jane@acme.com" />
+          <Input id="d-email" type="email" defaultValue="jane@geiger.studio" />
         </div>
       </div>
       <DialogFooter>
@@ -49,7 +49,7 @@ export const DeleteConfirm = () => (
     <DialogTrigger asChild>
       <Button variant="destructive">Delete workspace</Button>
     </DialogTrigger>
-    <DialogContent>
+    <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
       <DialogHeader>
         <DialogTitle>Delete workspace?</DialogTitle>
         <DialogDescription>

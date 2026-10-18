@@ -14,7 +14,7 @@ export const WithPlaceholder = () => (
 
 export const Disabled = () => (
   <div style={{ width: 320 }}>
-    <Textarea defaultValue="This field is read-only." disabled />
+    <Textarea defaultValue="Archived on Sep 12, 2026 — notes are locked." disabled />
   </div>
 );
 
