@@ -20,7 +20,7 @@ import { SidebarTrigger } from "./sidebar.jsx";
 //   - activity: e.g. a Supabase activity line rendered under the header
 // `label` is the product name shown next to the logo; `logoSrc` defaults to
 // /logo1.svg and the logo links to `homeHref`. `helpHref` points the ? button
-// somewhere (e.g. /docs); with no href it renders an inert button. A built-in
+// somewhere (e.g. /help); with no href it renders an inert button. A built-in
 // Bell button renders only when no `notifications` slot is provided.
 //
 // Stable default so the palette's memoised entry pool isn't rebuilt every render.

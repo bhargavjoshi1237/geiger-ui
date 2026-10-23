@@ -54,7 +54,7 @@ export const SUITE_PRODUCTS = [
 export const SUITE_RESOURCES = [
   { label: "Solutions", href: "/solutions" },
   { label: "Features", href: "/features" },
-  { label: "Documentation", href: "/docs" },
+  { label: "Documentation", href: "/help" },
   { label: "Changelog", href: "/changelog" },
   { label: "Blog", href: "/blog" },
 ];

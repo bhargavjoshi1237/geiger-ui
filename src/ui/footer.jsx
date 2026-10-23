@@ -35,7 +35,7 @@ export default function Footer() {
             <div>
               <h4 className="font-bold text-foreground mb-4">Resources</h4>
               <ul className="flex flex-col gap-3 text-sm text-muted-foreground">
-                <li><a href="/docs" className="hover:text-foreground transition-colors">Documentation</a></li>
+                <li><a href="/help" className="hover:text-foreground transition-colors">Documentation</a></li>
                 <li><a href="#" className="hover:text-foreground transition-colors">Help Center</a></li>
                 <li><a href="#" className="hover:text-foreground transition-colors">Community</a></li>
                 <li><a href="#" className="hover:text-foreground transition-colors">Contact Support</a></li>

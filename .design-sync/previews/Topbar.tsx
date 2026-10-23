@@ -93,7 +93,7 @@ export const EventsWorkspace = () => (
     <Topbar
       label="Events"
       logoSrc={LOGO_SRC}
-      helpHref="/docs"
+      helpHref="/help"
       searchPlaceholder="Search Events..."
       searchNav={EVENTS_NAV}
       profile={<Profile />}
@@ -106,7 +106,7 @@ export const WithNotificationsAndActivity = () => (
     <Topbar
       label="Flow"
       logoSrc={LOGO_SRC}
-      helpHref="/docs"
+      helpHref="/help"
       searchPlaceholder="Search issues..."
       searchNav={EVENTS_NAV}
       notifications={<NotificationsBell count={4} />}
@@ -142,7 +142,7 @@ export const SearchPaletteOpen = () => {
         <Topbar
           label="Events"
           logoSrc={LOGO_SRC}
-          helpHref="/docs"
+          helpHref="/help"
           searchPlaceholder="Search Events..."
           searchNav={EVENTS_NAV}
           searchRecentsKey="ds-preview:topbar:recents"
