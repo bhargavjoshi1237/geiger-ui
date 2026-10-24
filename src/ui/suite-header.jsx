@@ -51,7 +51,7 @@ export function SuiteHeader({
           />
         ) : null}
 
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="hidden items-center gap-2 md:flex">
           {themeToggle ? <ThemeToggle /> : null}
           {profile ?? (
             <a
