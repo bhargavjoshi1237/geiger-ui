@@ -26,6 +26,7 @@ export function SuiteHeader({
   logoSrc = "/logo1.svg",
   label = "Geiger Studios",
   products,
+  solutions,
   resources,
 }) {
   return (
@@ -44,6 +45,7 @@ export function SuiteHeader({
           <SuiteMegaMenu
             userId={userId}
             products={products}
+            solutions={solutions}
             resources={resources}
             signInHref={signInHref}
             dashboardHref={dashboardHref}

@@ -2,19 +2,28 @@
 
 import {
   ArrowRight,
+  Braces,
   BrainCircuit,
+  Briefcase,
   Building2,
   CalendarDays,
   ChevronDown,
+  ClipboardList,
   ContainerIcon,
-  FileSignature,
   FileText,
   GalleryVerticalEnd,
+  Gauge,
+  Inbox,
   Layers,
   Megaphone,
   Menu,
-  MessagesSquare,
   Network,
+  Palette,
+  PenTool,
+  Rocket,
+  Route,
+  Sparkles,
+  Ticket,
   Zap,
 } from "lucide-react";
 import { Button } from "./button.jsx";
@@ -46,13 +55,53 @@ export const SUITE_PRODUCTS = [
   { icon: GalleryVerticalEnd, label: "Content", description: "Personalized feeds that learn taste.", href: "/content" },
   { icon: Megaphone, label: "Campaign", description: "Run marketing campaigns.", href: "/campaign" },
   { icon: Network, label: "Pods", description: "API gateway for your services.", href: "/pods" },
-  { icon: MessagesSquare, label: "Comms", description: "Live chat and customer support.", href: "/comms" },
-  { icon: FileSignature, label: "Docs", description: "Send and sign documents.", href: "/docs" },
   { icon: Building2, label: "Property", description: "Manage real estate.", href: "/property" },
 ];
 
+// Marketing pages served by the dash at the domain root, grouped by who they're for; pass `solutions={null}` to hide the menu.
+export const SUITE_SOLUTIONS = {
+  groups: [
+    {
+      label: "Teams",
+      items: [
+        { icon: Briefcase, label: "Corporate", description: "Every department, one structure.", href: "/teams/corporate" },
+        { icon: Palette, label: "Creative", description: "In-house brand and creative teams.", href: "/teams/creative" },
+        { icon: Gauge, label: "Management", description: "Every project in one view.", href: "/teams/management" },
+      ],
+    },
+    {
+      label: "Built for",
+      items: [
+        { icon: Ticket, label: "Event organisers", description: "Fill the room, then run the door.", href: "/for/event-organisers" },
+        { icon: PenTool, label: "Creative studios", description: "From client brief to final file.", href: "/for/creative-studios" },
+        { icon: ClipboardList, label: "Operations teams", description: "Every request answered and tracked.", href: "/for/operations" },
+        { icon: Braces, label: "Developers", description: "APIs for content, files and answers.", href: "/for/developers" },
+      ],
+    },
+    {
+      label: "Product areas",
+      items: [
+        { icon: Inbox, label: "Intake and inboxes", description: "Every request has somewhere to land.", href: "/intake" },
+        { icon: Route, label: "Planning", description: "From first sketch to launch.", href: "/plan" },
+        { icon: Sparkles, label: "AI and automation", description: "Put your team's knowledge to work.", href: "/ai" },
+        { icon: Rocket, label: "Publish and sell", description: "Ship it to the people it's for.", href: "/launch" },
+      ],
+    },
+  ],
+  tours: [
+    { label: "Events", href: "/apps/events/ticketing" },
+    { label: "Notes", href: "/apps/notes/canvas" },
+    { label: "Flow", href: "/apps/flow/issues" },
+    { label: "Forms", href: "/apps/forms/builder" },
+    { label: "Grey", href: "/apps/grey/knowledge-bases" },
+    { label: "Content", href: "/apps/content/modelling" },
+    { label: "Assets", href: "/apps/assets/library" },
+    { label: "Property", href: "/apps/property/leasing" },
+  ],
+  hub: { label: "All solutions", href: "/solutions" },
+};
+
 export const SUITE_RESOURCES = [
-  { label: "Solutions", href: "/solutions" },
   { label: "Features", href: "/features" },
   { label: "Documentation", href: "/help" },
   { label: "Changelog", href: "/changelog" },
@@ -72,6 +121,7 @@ function ProductBadge({ children, className = "" }) {
 export function SuiteMegaMenu({
   userId = null,
   products = SUITE_PRODUCTS,
+  solutions = SUITE_SOLUTIONS,
   resources = SUITE_RESOURCES,
   pricingHref = "/pricing",
   signInHref = "/login",
@@ -127,6 +177,80 @@ export function SuiteMegaMenu({
             </div>
           </div>
         </div>
+
+        {solutions ? (
+          // Not `relative`: the wide panel centres on the nav instead of its trigger, so it stays on screen at every desktop width.
+          <div className="group" onMouseLeave={closeMenuOnMouseLeave}>
+            <button
+              type="button"
+              aria-haspopup="true"
+              className="flex items-center gap-1 py-6 transition-colors hover:text-foreground focus-visible:text-foreground focus-visible:outline-none"
+            >
+              Solutions
+              <ChevronDown className="h-3.5 w-3.5 transition-transform duration-200 group-hover:rotate-180 group-focus-within:rotate-180" />
+            </button>
+
+            <div className="invisible absolute left-1/2 top-full w-[760px] max-w-[calc(100vw-2rem)] -translate-x-1/2 translate-y-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+              <div className="overflow-hidden rounded-xl border border-border bg-surface-subtle shadow-xl">
+                <div className="grid grid-cols-3 gap-2 p-4">
+                  {solutions.groups.map((group) => (
+                    <div key={group.label} className="min-w-0">
+                      <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{group.label}</p>
+                      <div className="space-y-0.5">
+                        {group.items.map((item) => {
+                          const Icon = item.icon;
+                          return (
+                            <a
+                              href={item.href}
+                              key={item.href}
+                              className="flex items-start gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover focus-visible:outline-none"
+                            >
+                              {Icon ? <Icon className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" /> : null}
+                              <div className="min-w-0">
+                                <p className="text-sm text-foreground">{item.label}</p>
+                                {item.description ? (
+                                  <p className="text-xs leading-snug text-muted-foreground">{item.description}</p>
+                                ) : null}
+                              </div>
+                            </a>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {solutions.tours?.length || solutions.hub ? (
+                  <div className="flex items-center gap-4 border-t border-border bg-foreground/[0.02] px-4 py-3">
+                    {solutions.tours?.length ? (
+                      <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
+                        <span className="mr-1 px-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">App tours</span>
+                        {solutions.tours.map((tour) => (
+                          <a
+                            href={tour.href}
+                            key={tour.href}
+                            className="rounded-full border border-border px-2.5 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:bg-surface-hover focus-visible:text-foreground focus-visible:outline-none"
+                          >
+                            {tour.label}
+                          </a>
+                        ))}
+                      </div>
+                    ) : null}
+                    {solutions.hub ? (
+                      <a
+                        href={solutions.hub.href}
+                        className="ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover focus-visible:outline-none"
+                      >
+                        {solutions.hub.label}
+                        <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
+                      </a>
+                    ) : null}
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          </div>
+        ) : null}
 
         <div className="group relative" onMouseLeave={closeMenuOnMouseLeave}>
           <button
@@ -184,7 +308,7 @@ export function SuiteMegaMenu({
                 <SheetTitle className="mt-0.5">Geiger Studio</SheetTitle>
               </div>
               <SheetDescription className="text-muted-foreground">
-                Browse products, resources, and pricing.
+                Browse products, solutions, resources, and pricing.
               </SheetDescription>
             </SheetHeader>
 
@@ -209,6 +333,58 @@ export function SuiteMegaMenu({
                   })}
                 </div>
               </div>
+
+              {solutions ? (
+                <div className="space-y-3">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Solutions</p>
+                  {solutions.groups.map((group) => (
+                    <div key={group.label} className="space-y-1">
+                      <p className="text-[11px] font-medium text-muted-foreground">{group.label}</p>
+                      <div className="grid grid-cols-2 gap-1">
+                        {group.items.map((item) => {
+                          const Icon = item.icon;
+                          return (
+                            <SheetClose asChild key={item.href}>
+                              <a
+                                href={item.href}
+                                className="flex min-w-0 items-center gap-2 rounded-lg px-2 py-2 text-sm text-foreground"
+                              >
+                                {Icon ? <Icon className="h-4 w-4 shrink-0 text-muted-foreground" /> : null}
+                                <span className="truncate">{item.label}</span>
+                              </a>
+                            </SheetClose>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                  {solutions.tours?.length ? (
+                    <div className="flex flex-nowrap gap-2 overflow-x-auto pb-1">
+                      {solutions.tours.map((tour) => (
+                        <SheetClose asChild key={tour.href}>
+                          <a
+                            href={tour.href}
+                            className="shrink-0 rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
+                          >
+                            {tour.label} tour
+                          </a>
+                        </SheetClose>
+                      ))}
+                    </div>
+                  ) : null}
+                  {solutions.hub ? (
+                    <SheetClose asChild>
+                      <a
+                        href={solutions.hub.href}
+                        className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-foreground"
+                      >
+                        {solutions.hub.label}
+                        <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                      </a>
+                    </SheetClose>
+                  ) : null}
+                </div>
+              ) : null}
 
               <div className="space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Resources</p>
