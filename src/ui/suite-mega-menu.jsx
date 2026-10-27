@@ -88,17 +88,17 @@ export const SUITE_SOLUTIONS = {
       ],
     },
   ],
+  // Drawn as icon buttons with the same marks as the Products menu; `label` is their accessible name and tooltip.
   tours: [
-    { label: "Events", href: "/apps/events/ticketing" },
-    { label: "Notes", href: "/apps/notes/canvas" },
-    { label: "Flow", href: "/apps/flow/issues" },
-    { label: "Forms", href: "/apps/forms/builder" },
-    { label: "Grey", href: "/apps/grey/knowledge-bases" },
-    { label: "Content", href: "/apps/content/modelling" },
-    { label: "Assets", href: "/apps/assets/library" },
-    { label: "Property", href: "/apps/property/leasing" },
+    { icon: CalendarDays, label: "Events", href: "/apps/events/ticketing" },
+    { icon: Zap, label: "Notes", href: "/apps/notes/canvas" },
+    { icon: ContainerIcon, label: "Flow", href: "/apps/flow/issues" },
+    { icon: FileText, label: "Forms", href: "/apps/forms/builder" },
+    { icon: BrainCircuit, label: "Grey", href: "/apps/grey/knowledge-bases" },
+    { icon: GalleryVerticalEnd, label: "Content", href: "/apps/content/modelling" },
+    { icon: Layers, label: "Assets", href: "/apps/assets/library" },
+    { icon: Building2, label: "Property", href: "/apps/property/leasing" },
   ],
-  hub: { label: "All solutions", href: "/solutions" },
 };
 
 export const SUITE_RESOURCES = [
@@ -220,31 +220,23 @@ export function SuiteMegaMenu({
                   ))}
                 </div>
 
-                {solutions.tours?.length || solutions.hub ? (
-                  <div className="flex items-center gap-4 border-t border-border bg-foreground/[0.02] px-4 py-3">
-                    {solutions.tours?.length ? (
-                      <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
-                        <span className="mr-1 px-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">App tours</span>
-                        {solutions.tours.map((tour) => (
-                          <a
-                            href={tour.href}
-                            key={tour.href}
-                            className="rounded-full border border-border px-2.5 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:bg-surface-hover focus-visible:text-foreground focus-visible:outline-none"
-                          >
-                            {tour.label}
-                          </a>
-                        ))}
-                      </div>
-                    ) : null}
-                    {solutions.hub ? (
-                      <a
-                        href={solutions.hub.href}
-                        className="ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-surface-hover focus-visible:bg-surface-hover focus-visible:outline-none"
-                      >
-                        {solutions.hub.label}
-                        <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
-                      </a>
-                    ) : null}
+                {solutions.tours?.length ? (
+                  <div className="flex items-center gap-1 border-t border-border bg-foreground/[0.02] px-4 py-2.5">
+                    <span className="mr-2 px-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">App tours</span>
+                    {solutions.tours.map((tour) => {
+                      const Icon = tour.icon;
+                      return (
+                        <a
+                          href={tour.href}
+                          key={tour.href}
+                          aria-label={`${tour.label} tour`}
+                          title={`${tour.label} tour`}
+                          className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground focus-visible:bg-surface-hover focus-visible:text-foreground focus-visible:outline-none"
+                        >
+                          <Icon className="h-4 w-4" />
+                        </a>
+                      );
+                    })}
                   </div>
                 ) : null}
               </div>
@@ -359,29 +351,25 @@ export function SuiteMegaMenu({
                     </div>
                   ))}
                   {solutions.tours?.length ? (
-                    <div className="flex flex-nowrap gap-2 overflow-x-auto pb-1">
-                      {solutions.tours.map((tour) => (
-                        <SheetClose asChild key={tour.href}>
-                          <a
-                            href={tour.href}
-                            className="shrink-0 rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
-                          >
-                            {tour.label} tour
-                          </a>
-                        </SheetClose>
-                      ))}
+                    <div className="space-y-1">
+                      <p className="text-[11px] font-medium text-muted-foreground">App tours</p>
+                      <div className="flex flex-nowrap gap-2 overflow-x-auto pb-1">
+                        {solutions.tours.map((tour) => {
+                          const Icon = tour.icon;
+                          return (
+                            <SheetClose asChild key={tour.href}>
+                              <a
+                                href={tour.href}
+                                aria-label={`${tour.label} tour`}
+                                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-surface-subtle/50 text-muted-foreground"
+                              >
+                                <Icon className="h-4 w-4" />
+                              </a>
+                            </SheetClose>
+                          );
+                        })}
+                      </div>
                     </div>
-                  ) : null}
-                  {solutions.hub ? (
-                    <SheetClose asChild>
-                      <a
-                        href={solutions.hub.href}
-                        className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-foreground"
-                      >
-                        {solutions.hub.label}
-                        <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                      </a>
-                    </SheetClose>
                   ) : null}
                 </div>
               ) : null}
