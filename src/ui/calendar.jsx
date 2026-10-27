@@ -262,6 +262,54 @@ export function Calendar({
 
   const prevDayEventMapRef = React.useRef({});
 
+  // Day-view drag across empty hours; onEventCreate(start, end) fires once on release.
+  const [hourDrag, setHourDrag] = useState(null);
+  const hourDragRef = React.useRef(null);
+  const hourDragActive = hourDrag !== null;
+
+  const startHourDrag = (hour) => {
+    hourDragRef.current = { anchor: hour, current: hour };
+    setHourDrag(hourDragRef.current);
+  };
+
+  useEffect(() => {
+    if (!hourDragActive) return undefined;
+
+    const setDrag = (next) => {
+      hourDragRef.current = next;
+      setHourDrag(next);
+    };
+    const handleMove = (e) => {
+      const drag = hourDragRef.current;
+      const slot = document
+        .elementFromPoint(e.clientX, e.clientY)
+        ?.closest("[data-calendar-hour]");
+      if (!drag || !slot) return;
+      const hour = Number(slot.getAttribute("data-calendar-hour"));
+      if (hour !== drag.current) setDrag({ ...drag, current: hour });
+    };
+    const handleUp = () => {
+      const drag = hourDragRef.current;
+      setDrag(null);
+      if (!drag || !onEventCreate) return;
+      const start = new Date(selectedDay);
+      start.setHours(Math.min(drag.anchor, drag.current), 0, 0, 0);
+      const end = new Date(selectedDay);
+      end.setHours(Math.max(drag.anchor, drag.current) + hourInterval, 0, 0, 0);
+      onEventCreate(start, end);
+    };
+    const handleCancel = () => setDrag(null);
+
+    window.addEventListener("pointermove", handleMove);
+    window.addEventListener("pointerup", handleUp);
+    window.addEventListener("pointercancel", handleCancel);
+    return () => {
+      window.removeEventListener("pointermove", handleMove);
+      window.removeEventListener("pointerup", handleUp);
+      window.removeEventListener("pointercancel", handleCancel);
+    };
+  }, [hourDragActive, selectedDay, onEventCreate, hourInterval]);
+
   useEffect(() => {
     setCurrentDate(new Date(selectedDate));
     setSelectedDay(new Date(selectedDate));
@@ -1008,6 +1056,11 @@ export function Calendar({
       hours.push(h);
     }
 
+    const dragFrom = hourDrag ? Math.min(hourDrag.anchor, hourDrag.current) : null;
+    const dragTo = hourDrag ? Math.max(hourDrag.anchor, hourDrag.current) : null;
+    const hourLabel = (h) =>
+      timeFormat === "12h" ? formatHour(h % 24) : `${h % 24}:00`;
+
     const dayEvents = events.filter((event) => {
       const eventStart = new Date(event.start);
       return isSameDay(eventStart, selectedDay);
@@ -1083,18 +1136,16 @@ export function Calendar({
                     key={idx}
                     onClick={() => handleDayStripClick(day)}
                     className={cn(
-                      "flex-1 min-w-0 flex flex-col items-center justify-center rounded-lg",
-                      "hover:bg-surface-hover transition-colors",
-                      isSelected && "bg-surface-hover border border-border-strong",
+                      "group flex-1 min-w-0 flex flex-col items-center justify-center rounded-lg",
                       ACTIVITY_COLORS[dayActivity]
                     )}
                   >
                     <div
                       className={cn(
-                        "text-sm font-semibold mt-0.5 w-7 h-7 flex items-center justify-center rounded-lg",
-                        isToday && "bg-zinc-300 dark:bg-zinc-500 text-foreground",
-                        !isToday && !isSelected && "text-foreground",
-                        isSelected && !isToday && "text-foreground"
+                        "text-sm font-semibold mt-0.5 w-8 h-8 flex items-center justify-center rounded-md border border-transparent text-foreground transition-colors",
+                        isToday ? "bg-zinc-300 dark:bg-zinc-500" : "group-hover:bg-surface-hover",
+                        isSelected && "border-border-strong",
+                        isSelected && !isToday && "bg-surface-hover"
                       )}
                     >
                       {day.getDate()}
@@ -1119,7 +1170,8 @@ export function Calendar({
             {hours.map((hour) => {
               const hourEvents = getEventsForHour(selectedDay, hour);
               const activityLevel = showActivity ? getActivityForHour(selectedDay, hour) : 0;
-              
+              const inDrag = hourDrag !== null && hour >= dragFrom && hour <= dragTo;
+
               return (
                 <div
                   key={hour}
@@ -1127,29 +1179,33 @@ export function Calendar({
                 >
                   <div className="w-16 flex-shrink-0 pt-2">
                     <span className="text-sm text-muted-foreground">
-                      {timeFormat === "12h" ? formatHour(hour) : `${hour}:00`}
+                      {hourLabel(hour)}
                     </span>
                   </div>
                   <div className={cn("w-full relative rounded-lg p-1", ACTIVITY_COLORS[activityLevel])}>
                     {hourEvents.length === 0 ? (
-                      <div 
+                      <div
+                        data-calendar-hour={hour}
                         className={cn(
-                          "h-12 rounded-lg border border-dashed border-border cursor-pointer hover:border-border-strong hover:bg-surface-subtle/30 transition-all",
-                          enableCreate && "group"
+                          "h-12 rounded-lg border border-dashed border-border cursor-pointer select-none hover:border-border-strong hover:bg-surface-subtle/30 transition-all",
+                          enableCreate && "group",
+                          inDrag && "border-solid border-border-strong bg-surface-hover hover:bg-surface-hover"
                         )}
-                        onClick={() => {
-                          if (enableCreate && onEventCreate) {
-                            const createDate = new Date(selectedDay);
-                            createDate.setHours(hour, 0, 0, 0);
-                            onEventCreate(createDate);
-                          }
+                        onPointerDown={(e) => {
+                          if (!enableCreate || !onEventCreate || e.button !== 0) return;
+                          e.preventDefault();
+                          startHourDrag(hour);
                         }}
                       >
-                        {enableCreate && (
-                          <div className="hidden group-hover:flex items-center justify-center h-full text-muted-foreground text-sm">
-                            Click to add event
+                        {inDrag && hour === dragFrom ? (
+                          <div className="flex items-center justify-center h-full text-foreground text-sm font-medium">
+                            {hourLabel(dragFrom)} – {hourLabel(dragTo + hourInterval)}
                           </div>
-                        )}
+                        ) : enableCreate && hourDrag === null ? (
+                          <div className="hidden group-hover:flex items-center justify-center h-full text-muted-foreground text-sm">
+                            Click or drag to add event
+                          </div>
+                        ) : null}
                       </div>
                     ) : (
                       <div className="space-y-2">
