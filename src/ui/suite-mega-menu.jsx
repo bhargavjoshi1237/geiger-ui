@@ -23,6 +23,7 @@ import {
   Rocket,
   Route,
   Sparkles,
+  Target,
   Ticket,
   Zap,
 } from "lucide-react";
@@ -67,6 +68,7 @@ export const SUITE_SOLUTIONS = {
         { icon: Briefcase, label: "Corporate", description: "Every department, one structure.", href: "/teams/corporate" },
         { icon: Palette, label: "Creative", description: "In-house brand and creative teams.", href: "/teams/creative" },
         { icon: Gauge, label: "Management", description: "Every project in one view.", href: "/teams/management" },
+        { icon: Target, label: "Marketing", description: "Launches, sign-ups and events.", href: "/teams/marketing" },
       ],
     },
     {
@@ -115,6 +117,50 @@ function ProductBadge({ children, className = "" }) {
     >
       {children}
     </span>
+  );
+}
+
+// Mobile Solutions: one collapsible list styled like Resources, with the app tours as icons like the desktop menu.
+function MobileSolutions({ solutions }) {
+  const items = solutions.groups.flatMap((group) => group.items);
+
+  return (
+    <details className="group mt-3 space-y-2">
+      <summary className="flex cursor-pointer list-none items-center justify-between pr-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground [&::-webkit-details-marker]:hidden">
+        Solutions
+        <ChevronDown className="h-4 w-4 transition-transform duration-200 group-open:rotate-180" />
+      </summary>
+
+      {items.map((item) => (
+        <SheetClose asChild key={item.href}>
+          <a href={item.href} className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-foreground">
+            {item.label}
+            <ArrowRight className="h-4 w-4 text-muted-foreground" />
+          </a>
+        </SheetClose>
+      ))}
+
+      {solutions.tours?.length ? (
+        <div className="flex flex-wrap items-center gap-1 px-3 pt-1">
+          <span className="mr-1 text-xs text-muted-foreground">App tours</span>
+          {solutions.tours.map((tour) => {
+            const Icon = tour.icon;
+            return (
+              <SheetClose asChild key={tour.href}>
+                <a
+                  href={tour.href}
+                  aria-label={`${tour.label} tour`}
+                  title={`${tour.label} tour`}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors active:bg-surface-hover"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              </SheetClose>
+            );
+          })}
+        </div>
+      ) : null}
+    </details>
   );
 }
 
@@ -209,7 +255,7 @@ export function SuiteMegaMenu({
                               <div className="min-w-0">
                                 <p className="text-sm text-foreground">{item.label}</p>
                                 {item.description ? (
-                                  <p className="text-xs leading-snug text-muted-foreground">{item.description}</p>
+                                  <p className="line-clamp-2 min-h-[2lh] text-xs leading-snug text-muted-foreground">{item.description}</p>
                                 ) : null}
                               </div>
                             </a>
@@ -307,14 +353,14 @@ export function SuiteMegaMenu({
             <div className="space-y-6 px-4 pb-6">
               <div className="space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Products</p>
-                <div className="flex flex-nowrap gap-2 overflow-x-auto pb-1">
+                <div className="flex flex-nowrap gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                   {products.map((item) => {
                     const Icon = item.icon;
                     return (
                       <SheetClose asChild key={item.label}>
                         <a
                           href={item.href}
-                          className="flex min-w-[86px] flex-col items-center justify-center gap-2 rounded-lg border border-border bg-surface-subtle/50 px-2 py-3 text-center text-xs text-foreground"
+                          className="flex min-h-[92px] min-w-[86px] flex-col items-center justify-center gap-2 rounded-lg border border-border bg-surface-subtle/50 px-2 py-4 text-center text-xs text-foreground"
                         >
                           <Icon className="h-4 w-4 text-muted-foreground" />
                           <p className="leading-tight">{item.label}</p>
@@ -326,53 +372,7 @@ export function SuiteMegaMenu({
                 </div>
               </div>
 
-              {solutions ? (
-                <div className="space-y-3">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Solutions</p>
-                  {solutions.groups.map((group) => (
-                    <div key={group.label} className="space-y-1">
-                      <p className="text-[11px] font-medium text-muted-foreground">{group.label}</p>
-                      <div className="grid grid-cols-2 gap-1">
-                        {group.items.map((item) => {
-                          const Icon = item.icon;
-                          return (
-                            <SheetClose asChild key={item.href}>
-                              <a
-                                href={item.href}
-                                className="flex min-w-0 items-center gap-2 rounded-lg px-2 py-2 text-sm text-foreground"
-                              >
-                                {Icon ? <Icon className="h-4 w-4 shrink-0 text-muted-foreground" /> : null}
-                                <span className="truncate">{item.label}</span>
-                              </a>
-                            </SheetClose>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ))}
-                  {solutions.tours?.length ? (
-                    <div className="space-y-1">
-                      <p className="text-[11px] font-medium text-muted-foreground">App tours</p>
-                      <div className="flex flex-nowrap gap-2 overflow-x-auto pb-1">
-                        {solutions.tours.map((tour) => {
-                          const Icon = tour.icon;
-                          return (
-                            <SheetClose asChild key={tour.href}>
-                              <a
-                                href={tour.href}
-                                aria-label={`${tour.label} tour`}
-                                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-surface-subtle/50 text-muted-foreground"
-                              >
-                                <Icon className="h-4 w-4" />
-                              </a>
-                            </SheetClose>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ) : null}
-                </div>
-              ) : null}
+              {solutions ? <MobileSolutions solutions={solutions} /> : null}
 
               <div className="space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Resources</p>
