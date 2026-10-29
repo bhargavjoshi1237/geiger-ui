@@ -47,6 +47,7 @@ export * from "./ui/tooltip.jsx";
 // Composite / suite components
 export * from "./ui/action-menu.jsx";
 export * from "./ui/activity-calendar.jsx";
+export * from "./ui/announcements.jsx";
 export * from "./ui/calendar.jsx";
 export * from "./ui/command-palette.jsx";
 export * from "./ui/date-picker.jsx";
