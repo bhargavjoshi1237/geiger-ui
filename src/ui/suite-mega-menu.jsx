@@ -167,6 +167,7 @@ function MobileSolutions({ solutions }) {
 export function SuiteMegaMenu({
   userId = null,
   products = SUITE_PRODUCTS,
+  badges,
   solutions = SUITE_SOLUTIONS,
   resources = SUITE_RESOURCES,
   pricingHref = "/pricing",
@@ -174,6 +175,9 @@ export function SuiteMegaMenu({
   dashboardHref = "/org",
   logoSrc = "/logo1.svg",
 }) {
+  // The host app passes live badges as { href: label }, where a missing href means no badge; until then each product keeps its built-in one.
+  const badgeFor = (item) => (badges ? badges[item.href] : item.badge);
+
   // Hover opens the panels; focus keeps them open for keyboard users. Drop focus
   // on leave so a panel isn't left pinned open after the pointer has gone.
   const closeMenuOnMouseLeave = (event) => {
@@ -212,7 +216,7 @@ export function SuiteMegaMenu({
                       <div className="min-w-0">
                         <p className="flex items-center gap-1.5 text-sm text-foreground">
                           {item.label}
-                          {item.badge ? <ProductBadge className="text-[9px]">{item.badge}</ProductBadge> : null}
+                          {badgeFor(item) ? <ProductBadge className="text-[9px]">{badgeFor(item)}</ProductBadge> : null}
                         </p>
                         <p className="truncate text-xs text-muted-foreground">{item.description}</p>
                       </div>
@@ -364,7 +368,7 @@ export function SuiteMegaMenu({
                         >
                           <Icon className="h-4 w-4 text-muted-foreground" />
                           <p className="leading-tight">{item.label}</p>
-                          {item.badge ? <ProductBadge className="text-[8px]">{item.badge}</ProductBadge> : null}
+                          {badgeFor(item) ? <ProductBadge className="text-[8px]">{badgeFor(item)}</ProductBadge> : null}
                         </a>
                       </SheetClose>
                     );
