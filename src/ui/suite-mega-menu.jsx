@@ -52,7 +52,7 @@ export const SUITE_PRODUCTS = [
   { icon: Layers, label: "Assets", description: "Manage your media.", href: "/assets" },
   { icon: BrainCircuit, label: "Grey", description: "Managed RAG and knowledge graphs.", href: "/grey" },
   { icon: FileText, label: "Forms", description: "Build forms and surveys.", href: "/forms" },
-  { icon: CalendarDays, label: "Events", description: "Organise & manage events.", href: "/events", badge: "Pre-alpha" },
+  { icon: CalendarDays, label: "Events", description: "Organise & manage events.", href: "/events", badge: "Early access" },
   { icon: GalleryVerticalEnd, label: "Content", description: "Personalized feeds that learn taste.", href: "/content" },
   { icon: Megaphone, label: "Campaign", description: "Run marketing campaigns.", href: "/campaign" },
   { icon: Network, label: "Pods", description: "API gateway for your services.", href: "/pods" },
@@ -60,13 +60,14 @@ export const SUITE_PRODUCTS = [
 ];
 
 // Marketing pages served by the dash at the domain root, grouped by who they're for; pass `solutions={null}` to hide the menu.
+// Descriptions sit on one truncated line, so keep each under ~175px of 12px Geist (about 30 characters) or it ends in an ellipsis.
 export const SUITE_SOLUTIONS = {
   groups: [
     {
       label: "Teams",
       items: [
-        { icon: Briefcase, label: "Corporate", description: "Every department, one structure.", href: "/teams/corporate" },
-        { icon: Palette, label: "Creative", description: "In-house brand and creative teams.", href: "/teams/creative" },
+        { icon: Briefcase, label: "Corporate", description: "Every department, one place.", href: "/teams/corporate" },
+        { icon: Palette, label: "Creative", description: "For in-house creative teams.", href: "/teams/creative" },
         { icon: Gauge, label: "Management", description: "Every project in one view.", href: "/teams/management" },
         { icon: Target, label: "Marketing", description: "Launches, sign-ups and events.", href: "/teams/marketing" },
       ],
@@ -76,16 +77,16 @@ export const SUITE_SOLUTIONS = {
       items: [
         { icon: Ticket, label: "Event organisers", description: "Fill the room, then run the door.", href: "/for/event-organisers" },
         { icon: PenTool, label: "Creative studios", description: "From client brief to final file.", href: "/for/creative-studios" },
-        { icon: ClipboardList, label: "Operations teams", description: "Every request answered and tracked.", href: "/for/operations" },
-        { icon: Braces, label: "Developers", description: "APIs for content, files and answers.", href: "/for/developers" },
+        { icon: ClipboardList, label: "Operations teams", description: "Every request, tracked to done.", href: "/for/operations" },
+        { icon: Braces, label: "Developers", description: "Content, file and answer APIs.", href: "/for/developers" },
       ],
     },
     {
       label: "Product areas",
       items: [
-        { icon: Inbox, label: "Intake and inboxes", description: "Every request has somewhere to land.", href: "/intake" },
+        { icon: Inbox, label: "Intake and inboxes", description: "A home for every request.", href: "/intake" },
         { icon: Route, label: "Planning", description: "From first sketch to launch.", href: "/plan" },
-        { icon: Sparkles, label: "AI and automation", description: "Put your team's knowledge to work.", href: "/ai" },
+        { icon: Sparkles, label: "AI and automation", description: "Put your knowledge to work.", href: "/ai" },
         { icon: Rocket, label: "Publish and sell", description: "Ship it to the people it's for.", href: "/launch" },
       ],
     },
@@ -113,7 +114,7 @@ export const SUITE_RESOURCES = [
 function ProductBadge({ children, className = "" }) {
   return (
     <span
-      className={`rounded-full border border-border px-1.5 py-px font-medium uppercase tracking-wide text-muted-foreground ${className}`}
+      className={`whitespace-nowrap rounded-full border border-border px-1.5 py-px font-medium uppercase tracking-wide text-muted-foreground ${className}`}
     >
       {children}
     </span>
@@ -142,7 +143,7 @@ function MobileSolutions({ solutions }) {
 
       {solutions.tours?.length ? (
         <div className="flex flex-wrap items-center gap-1 px-3 pt-1">
-          <span className="mr-1 text-xs text-muted-foreground">App tours</span>
+          <span className="mr-1 text-xs text-muted-foreground">Brochure</span>
           {solutions.tours.map((tour) => {
             const Icon = tour.icon;
             return (
@@ -259,7 +260,7 @@ export function SuiteMegaMenu({
                               <div className="min-w-0">
                                 <p className="text-sm text-foreground">{item.label}</p>
                                 {item.description ? (
-                                  <p className="line-clamp-2 min-h-[2lh] text-xs leading-snug text-muted-foreground">{item.description}</p>
+                                  <p className="truncate text-xs leading-snug text-muted-foreground">{item.description}</p>
                                 ) : null}
                               </div>
                             </a>
@@ -272,7 +273,7 @@ export function SuiteMegaMenu({
 
                 {solutions.tours?.length ? (
                   <div className="flex items-center gap-1 border-t border-border bg-foreground/[0.02] px-4 py-2.5">
-                    <span className="mr-2 px-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">App tours</span>
+                    <span className="mr-2 px-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Brochure</span>
                     {solutions.tours.map((tour) => {
                       const Icon = tour.icon;
                       return (
