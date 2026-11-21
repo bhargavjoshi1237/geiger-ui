@@ -68,11 +68,20 @@ src/
   ui/            shadcn primitives — the shared components
   nav/           navigation visibility: config schema, resolver, settings UI
   lib/utils.js   cn() helper
+  lib/glass-renderer.js  WebGL fluted-glass scene behind GlassBackdrop / GlassWordmark
   lib/hooks/     shared hooks (useIsMobile)
   tokens.css     design tokens (:root / .dark), base layer, and suite utilities
   logo-loading.css  LogoLoading keyframes (imported by tokens.css)
   index.js       public barrel — the single import surface
 ```
+
+## Landing pieces
+
+Shared by geiger-dash and every product landing page, so they stay in step:
+
+- `Footer`: the suite footer; it closes on an animated `GlassWordmark` ("GEIGER STUDIO" cut out of a WebGL fluted-glass fill, hidden without WebGL).
+- `GlassBackdrop`: the fluted-glass artifact on its own, for a hero (`palette`, `fill`).
+- `PlaygroundFrame`: lazily mounts an app's `/playground` route in an iframe; pass `viewport` to render at a fixed size scaled to fit.
 
 ## Navigation visibility
 

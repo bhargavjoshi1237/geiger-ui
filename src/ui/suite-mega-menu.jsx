@@ -10,6 +10,7 @@ import {
   ChevronDown,
   ClipboardList,
   ContainerIcon,
+  FileSignature,
   FileText,
   GalleryVerticalEnd,
   Gauge,
@@ -17,6 +18,7 @@ import {
   Layers,
   Megaphone,
   Menu,
+  MessagesSquare,
   Network,
   Palette,
   PenTool,
@@ -56,6 +58,8 @@ export const SUITE_PRODUCTS = [
   { icon: GalleryVerticalEnd, label: "Content", description: "Personalized feeds that learn taste.", href: "/content" },
   { icon: Megaphone, label: "Campaign", description: "Run marketing campaigns.", href: "/campaign" },
   { icon: Network, label: "Pods", description: "API gateway for your services.", href: "/pods" },
+  { icon: MessagesSquare, label: "Comms", description: "Live chat and customer support.", href: "/comms" },
+  { icon: FileSignature, label: "Docs", description: "Send and sign documents.", href: "/docs" },
   { icon: Building2, label: "Property", description: "Manage real estate.", href: "/property" },
 ];
 
